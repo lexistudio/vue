@@ -3,13 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    .page {
+      width: 1350px;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
   <div id="app">
-    <router-link to="/">home</router-link>
-    <router-link to="/news">news</router-link>
+    <app-head>
+      <app-nav :list="navList"></app-nav>
+    </app-head>
 
-    <router-view></router-view>
+    <div class="page">
+      <router-view></router-view>
+    </div>
   </div>
 
   <script src="js/build.js"></script>

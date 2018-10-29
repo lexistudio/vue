@@ -1,13 +1,13 @@
 <template>
-  <h1>{{ greeting }}</h1>
+  <header class="head">
+    <div class="page">
+      <slot></slot>
+    </div>
+  </header>
 </template>
 
-<script>
- module.exports = {
-  data: function () {
-    return {
-      greeting: "Привет Webpack"
-    }
+<style>
+  .head {
+    background: #212529;
   }
- }
-</script>
+</style>
