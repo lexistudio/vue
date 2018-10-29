@@ -6,21 +6,24 @@ var VueRouter = require("vue-router");
 //component
 var header = require("./www/js/components/app-head.vue");
 var news = require("./www/js/components/app-news.vue");
+var notFound = require("./www/js/components/app-not-found.vue");
 
 //register plugin
 Vue.use(VueRouter);
 
 var router = new VueRouter({
+  mode: "history",
   routes: [
     { path: "/", component: header },
     { path: "/news", component: news },
+    { path: "*", component: notFound },
   ]
 });
 
 new Vue({
   router
 }).$mount("#app")
-},{"./www/js/components/app-head.vue":8,"./www/js/components/app-news.vue":9,"vue-router":5,"vue/dist/vue.js":6}],2:[function(require,module,exports){
+},{"./www/js/components/app-head.vue":8,"./www/js/components/app-news.vue":9,"./www/js/components/app-not-found.vue":10,"vue-router":5,"vue/dist/vue.js":6}],2:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -22174,9 +22177,9 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2ec21016", __vue__options__)
+    hotAPI.createRecord("data-v-566040f4", __vue__options__)
   } else {
-    hotAPI.reload("data-v-2ec21016", __vue__options__)
+    hotAPI.reload("data-v-566040f4", __vue__options__)
   }
 })()}
 },{"vue":7,"vue-hot-reload-api":4}],9:[function(require,module,exports){
@@ -22189,9 +22192,24 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7731c8ee", __vue__options__)
+    hotAPI.createRecord("data-v-6a74eaf9", __vue__options__)
   } else {
-    hotAPI.reload("data-v-7731c8ee", __vue__options__)
+    hotAPI.reload("data-v-6a74eaf9", __vue__options__)
+  }
+})()}
+},{"vue":7,"vue-hot-reload-api":4}],10:[function(require,module,exports){
+var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
+if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
+__vue__options__.render = function render () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('h1',[_vm._v("404")])}
+__vue__options__.staticRenderFns = []
+if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-63e50452", __vue__options__)
+  } else {
+    hotAPI.reload("data-v-63e50452", __vue__options__)
   }
 })()}
 },{"vue":7,"vue-hot-reload-api":4}]},{},[1]);
