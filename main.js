@@ -1,6 +1,7 @@
 //plugin
-var Vue =       require("vue/dist/vue.js");
-var VueRouter = require("vue-router");
+var Vue =         require("vue/dist/vue.js");
+var VueResource = require("vue-resource");
+var VueRouter =   require("vue-router");
 
 //component
 var header =   require("./www/js/components/app-head.vue");
@@ -10,6 +11,7 @@ var news =     require("./www/js/components/app-news.vue");
 var notFound = require("./www/js/components/app-not-found.vue");
 
 //register plugin
+Vue.use(VueResource);
 Vue.use(VueRouter);
 
 Vue.config.devtools = false
