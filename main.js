@@ -20,7 +20,7 @@ Vue.config.productionTip = false
 
 //routes
 var routes = [
-  { name: "Главная", isActive: true, path: "/", component: main },
+  { name: "Главная", isActive: true, path: "/", component: main, },
   { name: "Новости", isActive: true, path: "/news", component: news },
   { name: "Контакты", isActive: true, path: "/contacts", component: notFound },
   { name: "Страница не найдена", isActive: false, path: "*", component: notFound },
@@ -31,6 +31,10 @@ var router = new VueRouter({
   mode: "history",
   routes
 });
+
+router.afterEach(function (to, from) {
+  window.document.title = to.name;
+})
 
 //init vue
 new Vue({

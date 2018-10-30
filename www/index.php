@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <title>tenzer</title>
+  <meta name="description" content="tenzer">
+  <meta name="keywords" content="tenzer">
   <style>
     * {
       margin: 0;
