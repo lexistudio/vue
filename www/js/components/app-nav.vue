@@ -1,23 +1,31 @@
 <template>
   <ul class="menu">
-    <li class="menu__li" v-for="(item, index) in list" :key="index" v-if="item.isActive">
-      <router-link :to="item.path" class="menu__a">
-        {{ item.name }}
+    <li class="menu__li">
+      <router-link to="/" class="menu__a">
+        Главная
+      </router-link>
+    </li>
+    <li class="menu__li">
+      <router-link to="/news" class="menu__a">
+        Новости
+      </router-link>
+    </li>
+    <li class="menu__li">
+      <router-link to="/contacts" class="menu__a">
+        Контакты
       </router-link>
     </li>
   </ul>
 </template>
 
-<script>
-  module.exports = {
-    props: ["list"]
-  }
-</script>
-
-<style>
+<style scoped>
   .menu {
     display: flex;
     list-style: none;
+    padding: 20px 0;
+  }
+  .menu--main .menu__a {
+    color: #000;
   }
   .menu__li {
     margin-left: 30px;
@@ -27,15 +35,9 @@
   }
   .menu__a {
     color: #fff;
-    height: 70px;
-    display: flex;
-    align-items: center;
     text-decoration: none;
-    text-transform: uppercase;
-    font-size: 18px;
-    line-height: 1;
   }
   .menu__a.router-link-exact-active {
-    border-bottom: 4px solid #0067F4;
+    color: #F54352;
   }
 </style>

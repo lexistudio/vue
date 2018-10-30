@@ -1,10 +1,20 @@
 <template>
   <header class="head">
     <div class="page">
-      <slot></slot>
+      <app-nav></app-nav>
     </div>
   </header>
 </template>
+
+<script>
+  var nav = require("./app-nav.vue");
+
+  module.exports = {
+    components: {
+      appNav: nav
+    }
+  }
+</script>
 
 <style>
   .head {

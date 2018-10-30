@@ -3,6 +3,10 @@ var Vue =         require("vue/dist/vue.js");
 var VueResource = require("vue-resource");
 var VueRouter =   require("vue-router");
 
+//register plugin
+Vue.use(VueResource);
+Vue.use(VueRouter);
+
 //component
 var header =   require("./www/js/components/app-head.vue");
 var nav =      require("./www/js/components/app-nav.vue");
@@ -10,11 +14,9 @@ var main =     require("./www/js/components/app-main.vue");
 var news =     require("./www/js/components/app-news.vue");
 var notFound = require("./www/js/components/app-not-found.vue");
 
-//register plugin
-Vue.use(VueResource);
-Vue.use(VueRouter);
-
+//config console log
 Vue.config.devtools = false
+Vue.config.productionTip = false
 
 //routes
 var routes = [
@@ -33,9 +35,6 @@ var router = new VueRouter({
 //init vue
 new Vue({
   router,
-  data: {
-    navList: routes
-  },
   components: {
     appHead: header,
     appNav: nav,

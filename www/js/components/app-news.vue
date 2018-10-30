@@ -1,12 +1,19 @@
 <template>
-  <div class="news">
-    <div class="news__item" v-for="(item, index) in list" :key="index">
-      {{ item }}
+  <div>
+    <app-head></app-head>
+    <div class="page">
+      <div class="news">
+        <div class="news__item" v-for="(item, index) in list" :key="index">
+          {{ item.id }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  var header = require("./app-head.vue");
+
   module.exports = {
     data: function () {
       return {
@@ -25,6 +32,9 @@
     },
     created: function () {
       this.post()
+    },
+    components: {
+      appHead: header
     }
   }
 </script>

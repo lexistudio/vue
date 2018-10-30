@@ -17,13 +17,7 @@
 </head>
 <body>
   <div id="app">
-    <app-head>
-      <app-nav :list="navList"></app-nav>
-    </app-head>
-
-    <div class="page">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 
   <script src="js/build.js"></script>
