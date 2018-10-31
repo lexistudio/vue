@@ -2,7 +2,7 @@
   <div>
     <header class="head">
       <div class="page">
-        <app-nav class="menu--mai"></app-nav>
+        <app-nav></app-nav>
       </div>
     </header>
     <div class="page">
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  var nav = require("./app-nav.vue");
+  var nav = require("../menu/template.vue");
 
   module.exports = {
     components: {

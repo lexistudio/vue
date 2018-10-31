@@ -1,0 +1,3538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>bare</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>bare</h1>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Минималистичный набор макросов для Stylus.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'blocks'
+@require 'buttons'
+@require 'clearfix'
+@require 'color'
+@require 'css3'
+@require 'display'
+@require 'fn'
+@require 'font'
+@require 'forms'
+@require 'height'
+@require 'icons'
+@require 'linear-gradient'
+@require 'margin'
+@require 'media'
+@require 'mq'
+@require 'normalize'
+@require 'overflow'
+@require 'padding'
+@require 'position'
+@require 'reset'
+@require 'size'
+@require 'text'
+@require 'vendor'
+@require 'width'
+@require 'webfont'</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_index">index</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Загрузчик модулей библиотеки.</p></div>
+<div class="sect2">
+<h3 id="_use_bare">use-bare()</h3>
+<div class="paragraph"><p>Выполняет генерацию классов для модулей библиотеки.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-bare()
+  use-normalize()
+  use-reset()
+  use-blocks()</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_block">block</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Реализует минимальную систему классов для построения макетов, в том числе
+основанных на типографских сетках.</p></div>
+<div class="paragraph"><p>Базовая реализация: <a href="http://arnaudleray.github.io/pocketgrid/">PocketGrid</a>.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'css3'                                                         // <b>&lt;1&gt;</b>
+@require 'clearfix'                                                     // <b>&lt;2&gt;</b>
+@require 'size'                                                         // <b>&lt;3&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>box-sizing()</code>
+</p>
+</li>
+<li>
+<p>
+<code>clearfix()</code>
+</p>
+</li>
+<li>
+<p>
+<code>size-vertical()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_use_blocks">use-blocks()</h3>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-blocks()                                                         // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+определяет классы системы блоков.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Модуль определяет два класса:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>block-group</code> — группа блоков, используемая как контейнер
+</p>
+</li>
+<li>
+<p>
+<code>block</code> — собственно, контентный блок
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>В терминологии сеток <code>block-group</code> соответствует сетке или ряду сетки,
+<code>block</code> — ячейке сетки.</p></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-blocks()
+  +media(any)
+    .block-group
+    .block
+    .block-group:after
+    .block:after
+    .block-group:before
+    .block:before
+      box-sizing: border-box                                            // <b>&lt;1&gt;</b>
+
+    .block-group
+      list-style-type: none                                             // <b>&lt;2&gt;</b>
+      padding: 0
+      margin:  0
+      clearfix: true
+
+    .block-group &gt; .block-group                                         // <b>&lt;3&gt;</b>
+      clear: none
+      float: left
+      margin: 0 !important
+
+    .block
+      float: left
+      width: 100%                                                       // <b>&lt;4&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+модуль использует <code>box-sizing: border-box</code>, работает в IE&gt;8. Для IE7
+    необходимо использовать polyfill.
+</p>
+</li>
+<li>
+<p>
+если контейнер является списком, на всякий случай сбрасываем стилизацию
+    списка.
+</p>
+</li>
+<li>
+<p>
+допускается вложение контейнера непосредственно в другой контейнер
+    при условии, что контейнер не использует отступы.
+</p>
+</li>
+<li>
+<p>
+по умолчанию все блоки имеют ширину 100% (mobile first).
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_block_gutter">block-gutter()</h3>
+<div class="paragraph"><p>Макрос <code>block-gutter</code> позволяет установить промежуток между блоками группы
+блоков.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.layout.block-group
+  block-gutter: 20px                                                 // <b>&lt;1&gt;</b>
+
+ .showcase.block-group
+   block-gutter: 20px, 2                                             // <b>&lt;2&gt;</b>
+
+ .showcase--aligned.block-group
+   block-gutter: 20px, 2, left                                       // <b>&lt;3&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+горизонтальный отступ 20px.
+</p>
+</li>
+<li>
+<p>
+горизонтальный отступ 20px, вертикальный — 2 текстовых линии.
+</p>
+</li>
+<li>
+<p>
+аналогично, но с выравниванием отступов влево (может решить проблему
+    горизонтального скроллинга, если она возникает).
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>По умолчанию используется центральное выравнивание блоков, т.н. общий отступ
+между блоками формируется половинными внутренними отступами блоков с каждой
+стороны.</p></div>
+<div class="paragraph"><p>При вызове можно указать горизонтальный и вертикальный отступы.</p></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>blocks-gutter(horizontal = 0, vertical = 0, align = center)
+  -blocks-gutter-group(horizontal, vertical, align)
+  &amp; &gt; .block
+    -blocks-gutter-block(horizontal, vertical, align)
+
+-blocks-gutter-group(horizontal, vertical, align)                      // <b>&lt;1&gt;</b>
+  vertical = size-vertical(vertical)
+  if horizontal &gt; 0
+    if align == center
+      margin-left:  ( 0 - horizontal/2 )
+      margin-right: ( 0 - horizontal/2 )
+    if align == left
+      margin-left:  ( 0 - horizontal )
+      margin-right: 0
+  if vertical &gt; 0
+    if align == center
+      margin-top:    ( 0 - vertical/2 )
+      margin-bottom: ( 0 - vertical/2 )
+    if align == left
+      margin-top:    ( 0 - vertical)
+      margin-bottom: 0
+
+-blocks-gutter-block(horizontal, vertical, align)                      // <b>&lt;2&gt;</b>
+  vertical = size-vertical(vertical)
+  if horizontal &gt; 0
+    if align == center
+      padding-left:  ( horizontal/2 )
+      padding-right: ( horizontal/2 )
+    if align == left
+      padding-left:  horizontal
+      padding-right: 0
+  if vertical &gt; 0
+    if align == center
+      padding-top:    ( vertical/2 )
+      padding-bottom: ( vertical/2 )
+    if align == left
+      padding-top:    vertical
+      padding-bottom: 0</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+вспомогательный макрос для отступов контейнера блоков
+</p>
+</li>
+<li>
+<p>
+вспомогательный макрос для внутренних отступов блока
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_blocks_break">blocks-break()</h3>
+<div class="paragraph"><p>Выводит блок в новом ряду.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.showcase-item.block:nth-child(3n+1)
+   blocks-break: true                                              // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+Выводим по 3 блока.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>blocks-break(enabled = true)
+  if enabled
+    clear: left</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_blocks_offset_left">blocks-offset-left()</h3>
+<div class="paragraph"><p>Задает левый отступ для блока. Имеет смысл использовать, если необходимо
+пропустить колонку.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.notes.block
+  blocks-offset-left: 30%</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>blocks-offset-left(offset)
+  margin-left: offset !important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_blocks_offset_right">blocks-offset-right()</h3>
+<div class="paragraph"><p>Задает правый отступ для блока. Аналогичен <code>blocks-offset-left()</code>.</p></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>blocks-offset-right(offset)
+  margin-right: offset !important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_blocks_columns">blocks-columns()</h3>
+<div class="paragraph"><p>Задает ширину колонок группы блоков исходя из количества одинаковых колонок.
+Дополнительно можно указать размер гооризонтального и вертикального отступов.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.showcase.block-group                                                // <b>&lt;1&gt;</b>
+  blocks-columns: 4, 20px, 2                                         // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+применяется к группе блоков
+</p>
+</li>
+<li>
+<p>
+4 одинаковых колонки, горизонтальный отступ 20px, вертикальный 2 линии
+</p>
+</li>
+</ol></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>blocks-columns(cols, gutter-horizontal = 0, gutter-vertical = 0, align = center)
+  &amp; &gt; .block
+    width: (100%/cols)
+  &amp; &gt; .block:nth-child({cols}n+1)
+    clear:left
+    blocks-gutter(gutter-horizontal, gutter-vertical, align)</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_buttons">buttons</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Базовые определения для описания кнопок.</p></div>
+<div class="paragraph"><p>Размер внутреннего отступа кнопок определяется переменной <code>buttons-padding</code>.</p></div>
+<div class="paragraph"><p>Рекомендуется использовать относительные размеры, ориентируясь на
+используемые размеры шрифты и высоту строки.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>buttons-padding ?= 0.5em 1em</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_use_buttons">use-buttons()</h3>
+<div class="paragraph"><p>Определяет минимальный класс <code>.button</code>, описывающий базовую геометрию и
+поведение кнопки. Класс не определяет какие-либо аспекты отображения кнопки.</p></div>
+<div class="paragraph"><p>Использование макроса не является обязательным, в качестве альтернативы можно
+определить свой базовый класс кнопки, унаследовав его от базового класса
+<code>$buttons-button</code>.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-buttons()</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-buttons()
+  +media(any)
+    .button
+      @extend $buttons-button</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_buttons_behavior">$buttons-behavior</h3>
+<div class="paragraph"><p>Определяет поведение кнопки. Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$buttons-behavior
+  display: inline-block
+  *display: inline                                                      // <b>&lt;1&gt;</b>
+  zoom: 1
+  line-height: normal
+  white-space: nowrap
+  vertical-align: baseline
+  text-align: center
+  cursor: pointer
+  -webkit-user-drag: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  &amp;::-moz-focus-inner
+    padding: 0                                                          // <b>&lt;2&gt;</b>
+    border: 0
+  &amp;:focus
+    outline: 0</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+проблемы в IE7
+</p>
+</li>
+<li>
+<p>
+обрамление сфокусированного элемента в FF
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_buttons_button">$buttons-button</h3>
+<div class="paragraph"><p>Определяем абстрактный базовый класс кнопок. Для определения класса кнопки
+необходимо унаследовать его от этого базового класса:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.button
+  @extend $buttons-button
+  background-color: gray
+  border-radius: 4px</code></pre>
+</div></div>
+<div class="paragraph"><p>Исходя из дизайна, в производном классе может потребоваться определить
+следующие свойства:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>color</code> — цвета текста кнопки
+</p>
+</li>
+<li>
+<p>
+<code>background</code> или <code>background-color</code> — фон кнопки
+</p>
+</li>
+<li>
+<p>
+<code>border-radius</code> — радиус закругления кнопки
+</p>
+</li>
+<li>
+<p>
+<code>border</code> — обрамление кнопки
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$buttons-button
+  @extend $buttons-behavior
+  font-family: inherit
+  font-size: 100%
+  *font-size: 90%                                                       // <b>&lt;1&gt;</b>
+  *overflow: visible                                                    // <b>&lt;2&gt;</b>
+  padding: buttons-padding
+  text-decoration: none</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+избыточный размер кнопок в IE7
+</p>
+</li>
+<li>
+<p>
+избыточный внутренний отступ для кнопок в IE7
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_buttons_shadow">buttons-shadow()</h3>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.button:active
+  buttons-shadow: active</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>buttons-shadow(type, shadow-size = 6px)
+  if type == active
+    return unquote('box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset')
+  if type == default
+    return unquote('0 0 ' + shadow-size + ' rgba(0,0,0, 0.20) inset')</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_clearfix">clearfix</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Определяет стандартное макро и абстрактный класс для clearfix
+(что кому больше нравится)</p></div>
+<div class="sect2">
+<h3 id="_clearfix_2">clearfix()</h3>
+<div class="literalblock">
+<div class="content">
+<pre><code>The Magnificent Micro Clearfix:</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>  .container
+    clearfix: true</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>clearfix(enabled = true)
+  if enabled
+    &amp;:before
+    &amp;:after
+      content: ""
+      display: table
+    &amp;:after
+      clear: both
+    zoom: 1 if ie-supported</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_clearfix_3">$clearfix</h3>
+<div class="paragraph"><p>Абстрактный класс clearfix:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$clearfix
+  clearfix: true</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_css3">css3</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Прозрачно реализует работы со свойствами CSS3, автоматически генерируя
+варианты, специфичные для различных браузеров.</p></div>
+<div class="paragraph"><p>Реализаци</p></div>
+<div class="paragraph"><p>Для использовани достаточно просто указать желаемое значение свойства в
+каноническом виде.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'vendor'                                                     // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>vendor()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_appearance">appearance()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>appearance</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>appearance()
+  vendor('appearance', arguments, only: webkit moz official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_box_shadow">box-shadow()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>box-shadow</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>box-shadow()
+  vendor('box-shadow', arguments, only: webkit official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_border_radius">border-radius()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>border-radius</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>border-radius()
+  pos = ()
+  augmented = false
+  importance = arguments[length(arguments) - 1] == !important ? !important : unquote('')
+
+  for args in arguments
+    for arg in args
+      if arg is a 'ident'
+        append(pos, arg)
+        augmented = true
+      else
+        append(pos, arg)
+        if augmented
+          -border-radius-apply(pos, importance)
+          pos = ()
+  vendor('border-radius', pos, only: webkit official) unless augmented
+
+-border-radius-apply(pos, importance)
+  if length(pos) == 3
+    // border-radius: &lt;top | buttom&gt; &lt;left | right&gt; &lt;n&gt;
+    y = pos[0]
+    x = pos[1]
+    // We don't use moz for simple boder-radius anymore
+    // vendor('border-radius-%s%s' % pos, pos[2], only: moz)
+    vendor('border-%s-%s-radius' % pos, pos[2] importance, only: webkit official)
+  else if pos[0] in (top bottom)
+    // border-radius: &lt;top | bottom&gt; &lt;n&gt;
+    -border-radius-apply(pos[0] left pos[1], importance)
+    -border-radius-apply(pos[0] right pos[1], importance)
+  else if pos[0] in (left right)
+    // border-radius: &lt;left | right&gt; &lt;n&gt;
+    unshift(pos, top);
+    -border-radius-apply(pos, importance)
+    pos[0] = bottom
+    -border-radius-apply(pos, importance)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_background">background()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>background</code>, включая свойства <code>background-image</code>,
+<code>background-clip</code>, <code>background-origin</code>, <code>background-size</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>background()
+  if match('-gradient\(', ''+arguments)
+    vendor('background', arguments, vendor-property: false)
+  else
+    background arguments
+
+background-image()
+  if match('-gradient\(', ''+arguments)
+    vendor('background-image', arguments, vendor-property: false)
+  else
+    background-image arguments
+
+background-clip()
+  if arguments[0] == text
+    vendor('background-clip', arguments, only: webkit)
+  else
+    -background-legacy-values('background-clip', arguments)
+    background-clip: arguments
+
+background-origin()
+  -background-legacy-values('background-origin', arguments)
+  background-origin: arguments
+
+background-size()
+  vendor('background-size', arguments, only: webkit moz official)
+
+-background-legacy-values(property, args)
+  legacy_args = ()
+  importance = unquote('')
+  for subargs in args
+    for arg in subargs
+      if arg in (border-box padding-box content-box)
+        arg = unquote('border')  if arg == border-box
+        arg = unquote('padding') if arg == padding-box
+        arg = unquote('content') if arg == content-box
+      if arg != '!important'
+        push(legacy_args,arg)
+      else
+        importance = !important
+  vendor(property, unquote(join(', ',legacy_args)) importance, only: moz webkit)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_border_image">border-image()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>border-image</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>border-image()
+  vendor('border-image', arguments, only: webkit moz o official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_column">column</h3>
+<div class="paragraph"><p>Кроссбраузерные свойства <code>column-count</code>, <code>column-gap</code>, <code>column-rule</code>,
+<code>column-rule-color</code>, <code>column-rule-width</code>, <code>column-rule-style</code>,
+<code>column-width</code>, <code>column-span</code>, <code>column-fill</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>column-count()
+  vendor('column-count', arguments, only: webkit moz official)
+
+column-gap()
+  vendor('column-gap', arguments, only: webkit moz official)
+
+column-rule()
+  vendor('column-rule', arguments, only: webkit moz official)
+
+column-rule-color()
+  vendor('column-rule-color', arguments, only: webkit moz official)
+
+column-rule-width()
+  vendor('column-rule-width', arguments, only: webkit moz official)
+
+column-rule-style()
+  vendor('column-rule-style', arguments, only: webkit moz official)
+
+column-width()
+  vendor('column-width', arguments, only: webkit moz official)
+
+column-span()
+  vendor('column-span', arguments, only: webkit official)
+
+column-fill()
+  vendor('column-fill', arguments, only: moz)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_transform">transform()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>transform</code>, включая свойства <code>transform-origin</code>,
+<code>transform-style</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>transform()
+  vendor('transform', arguments)
+
+transform-origin()
+  vendor('transform-origin', arguments)
+
+transform-style()
+  vendor('transform-style', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_transition">transition()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>transition</code>, свойства <code>transition-property</code>,
+<code>transition-duration</code>, <code>transition-timing-function</code>, <code>transition-delay</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>transition()
+  vendor('transition', arguments)
+
+transition-property()
+  vendor('transition-property', arguments)
+
+transition-duration()
+  vendor('transition-duration', arguments)
+
+transition-timing-function()
+  vendor('transition-timing-function', arguments)
+
+transition-delay()
+  vendor('transition-delay', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_opacity">opacity()</h3>
+<div class="paragraph"><p>Поддержка прозрачности, в т.ч. для старых версий IE.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>opacity(n, args...)
+  opacity: n args
+  val = round(n * 100)
+  if val == 100
+    -ms-filter: none
+    filter: none
+  else
+    -ms-filter: '"progid:DXImageTransform.Microsoft.Alpha(Opacity=%s)"' % val args
+    filter: 'alpha(opacity=%s)' % val args</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_box_sizing">box-sizing()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>box-sizing</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>box-sizing()
+  vendor('box-sizing', arguments, only: webkit moz official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_flexbox">flexbox</h3>
+<div class="paragraph"><p>Кроссбраузерные свойства flexbox: <code>box-orient</code>, <code>box-flex-group</code>,
+<code>box-ordinal-group</code>, <code>box-align</code>, <code>box-pack</code>, <code>box-direction</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>box-orient()
+  vendor('box-orient', arguments, only: webkit moz official)
+
+box-flex-group()
+  vendor('box-flex-group', arguments, only: webkit moz official)
+
+box-ordinal-group()
+  vendor('box-ordinal-group', arguments, only: webkit moz ms official)
+
+box-align()
+  vendor('box-align', arguments, only: webkit moz ms official)
+
+box-pack()
+  vendor('box-pack', arguments, only: webkit moz ms official)
+
+box-direction()
+  vendor('box-direction', arguments, only: webkit moz ms official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_animation">animation()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>animation</code>, в том числе:  <code>animation-name</code>,
+<code>animation-duration</code>, <code>animation-delay</code>, <code>animation-direction</code>,
+<code>animation-iteration-count</code>, <code>animation-timing-function</code>,
+<code>animation-play-state</code>, <code>animation-fill-mode</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>animation()
+  vendor('animation', arguments)
+
+animation-name()
+  vendor('animation-name', arguments)
+
+animation-duration()
+  vendor('animation-duration', arguments)
+
+animation-delay()
+  vendor('animation-delay', arguments)
+
+animation-direction()
+  vendor('animation-direction', arguments)
+
+animation-iteration-count()
+  vendor('animation-iteration-count', arguments)
+
+animation-timing-function()
+  vendor('animation-timing-function', arguments)
+
+animation-play-state()
+  vendor('animation-play-state', arguments)
+
+animation-fill-mode()
+  vendor('animation-fill-mode', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_placeholder">placeholder()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>placeholder</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>placeholder()
+  for v in ':-webkit-input' '-moz' ':-moz' '-ms-input'
+    &amp;:{v}-placeholder
+      for pair in arguments
+        if typeof(pair) == 'function'
+          pair()
+        else if pair is not null &amp;&amp; pair[0] is not null
+          {pair[0]}: type(pair[1]) == 'string' ? s(pair[1]) : pair[1]</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_hyphens">hyphens()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>hyphens</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>hyphens()
+  vendor('hyphens', arguments, only: webkit moz ms official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_tab_size">tab-size()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>tab-size</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>tab-size()
+  vendor('tab-size', arguments, only: moz o official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_overflow_scrolling">overflow-scrolling()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>overflow-scrolling</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>overflow-scrolling()
+  vendor('overflow-scrolling', arguments, only: webkit official)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_text_overflow">text-overflow()</h3>
+<div class="paragraph"><p>Кроссбраузерный <code>text-overflow</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text-overflow()
+  vendor('text-overflow', arguments, only: official o)</code></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><code>=== text-size-adjust()</code></pre>
+</div></div>
+<div class="paragraph"><p>Кроссплатформенный <code>text-size-adjust</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text-size-adjust()
+  vendor('text-size-adjust', arguments, only: official webkit ms)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_font_smoothing">font-smoothing()</h3>
+<div class="paragraph"><p>Кроссплатформенный <code>font-smoothing</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>font-smoothing()
+  vendor('font-smoothing', arguments, only: webkit)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_cursor">cursor()</h3>
+<div class="paragraph"><p>Кроссплатформенный <code>cursor</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>cursor()
+  if match('-gradient\(', ''+arguments)
+    vendor('cursor', arguments, vendor-property: false)
+  else
+    cursor arguments</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_user_select">user-select()</h3>
+<div class="paragraph"><p>Кроссплатформенный <code>user-select</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>user-select()
+  vendor('user-select', arguments, only: webkit moz ms official)</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_display">display</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределение свойства display.</p></div>
+<div class="paragraph"><p>По умолчанию поддержка IE отключена:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>IE ?= false</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_display_2">display</h3>
+<div class="paragraph"><p>Добавляет IE хак для <code>display: inline-block</code>, если необходима поддержка IE.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>display()
+  type = shift(arguments)
+  if type == inline-block &amp;&amp; IE
+    display: inline-block arguments
+    *display: inline
+    zoom: 1
+  else
+    display: type arguments</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fn">fn</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Вспомогательные функциию и макросы.</p></div>
+<div class="sect2">
+<h3 id="_fn_has_important">fn-has-important</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>fn-has-important()
+  if last(arguments) == !important
+    return !important
+  else
+    return null</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_font">font</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Вспомогательные макросы для работы со шрифтами.</p></div>
+<div class="sect2">
+<h3 id="_use_font_face">use-font-face()</h3>
+<div class="paragraph"><p>Определяет загружаемый шрифт. Путь к загружаемым шрифтам задается значением
+переменной <code>font-path</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>font-path ?= '/fnt'</code></pre>
+</div></div>
+<div class="paragraph"><p>Модуль также определяет стандартный контейнер для определения шрифтовых
+стеков:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>fonts ?= {}</code></pre>
+</div></div>
+<div class="paragraph"><p>Рекомендуется определять все шрифтовые стеки в виде элементов этого хеша в
+конфигурации приложения:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>fonts.serif = PT Serif, serif                                   // <b>&lt;1&gt;</b>
+
+.test
+  font-family: fonts.serif                                      // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+в конфигурации приложения
+</p>
+</li>
+<li>
+<p>
+в стилях приложения
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_use_font_face_2">use-font-face()</h3>
+<div class="paragraph"><p>Определяет загружаемый шрифт. Пример использования:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-font-face('Bitstream Vera Serif Bold', 'VeraSeBd.%s')              <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="paragraph"><p>Загружаемый шрифт определяется его именем <code>name</code> (соответствует свойству
+<code>font-family</code> и шаблоном имени файла <code>filename</code>. Если шаблон начинается со
+строки <code>http://</code> или с символа <code>/</code>, значение переменной <code>font-path</code> не
+используется. В противном случае значение этой переменой прибавляется к началу
+шаблона имени файла.</p></div>
+<div class="paragraph"><p>Шаблон имени файла должен содержать последовательность <code>%s</code>, вместо которой
+подставляется расширение файла.</p></div>
+<div class="paragraph"><p>При определении шрифта необходимо также указать значения параметров
+<code>font-style</code> и <code>font-weight</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-font-face(font-family, font-file, font-style = normal, font-weight = 400)
+  filename = font-path + "/" + font-file unless match("^(http://|/)", font-file)
+  eot  = (filename % unquote("eot"))
+  woff = (filename % unquote("woff"))
+  ttf  = (filename % unquote("ttf"))
+  svg  = (filename % unquote("svg#webfont"))
+  @font-face
+    font-family: font-family
+    src: url(eot);
+    src: local("☺︎"),
+      url(eot?#iefix) format("embedded-opentype"),
+      url(woff) format("woff"),
+      url(ttf) format("truetype"),
+      url(svg) format("svg")
+    font-style:  font-style
+    font-weight: font-weight</code></pre>
+</div></div>
+<div class="paragraph"><p>font-stack()
+  r = unquote('')
+  for n,i in arguments
+    if i == 0
+      r = n
+    else
+      r = r,n
+  return r
+== forms</p></div>
+<div class="paragraph"><p>Стилизация форм — сложная задача, визуально формы могут сильно отличаться
+между собой в различных проектах.</p></div>
+<div class="paragraph"><p>Модуль не навязывает какое-либо стилистическое оформление форм, вместо этого
+он предлагает рекомендуемую структуру верстки формы и выставляет разумные
+значения по умолчанию, определяющие базовые метрики элементов.</p></div>
+<div class="paragraph"><p>Модуль вводит следующие понятия, представленные абстрактными классами:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>$forms-form</code> — контейнер для элементов формы. Одна форма может содержать
+  один (простейший случай) или несколько (отдельно для каждой части формы)
+  таких контейнеров.
+</p>
+</li>
+<li>
+<p>
+<code>$forms-input</code> — поле ввода формы. К полям ввода относятся элементы
+<code>&lt;input&gt;</code> с соответствующим типом, <code>&lt;textarea&gt;</code> и <code>&lt;select&gt;</code>. Все эти
+элементы характеризуются общими настройками обрамления и поведения при
+попадании элемента в фокус.
+</p>
+</li>
+<li>
+<p>
+<code>$forms-control</code> — элемент управления формы, как правило, включающий
+в себя элементы <code>&lt;input&gt;</code>. Наиболее распространенный пример — элементы
+управления <code>&lt;checkbox&gt;</code> и <code>radiobutton&gt;</code>.
+</p>
+</li>
+<li>
+<p>
+<code>$forms-label</code> — метка поля. С точки зрения верстки может быть реализована
+как непосредственно элементом <code>&lt;label&gt;</code>, так и контейнером, содержащим этот
+элемент (например, если <code>&lt;label&gt;</code> может быть многострочным).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Для определения блочной структуры формы имеет смысл также определить класс
+<code>form-field</code>, работающий как контейнер для элементов управления и полей ввода
+формы и являющий блоком в системе блоков модуля <code>blocks</code>.</p></div>
+<div class="paragraph"><p>Пример верстки формы:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;div class="signup-form&gt;
+  &lt;div class="form form--aligned block-group"&gt;
+    &lt;div class="form-label block"&gt;&lt;label for="name"&gt;Your name:&lt;/label&gt;&lt;/div&gt;
+    &lt;div class="form-field block"&gt;&lt;input id="name" type="text" class="form-input"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="form form--aligned block-group"&gt;
+    &lt;div class="form-label block"&gt;&lt;label for="email"&gt;Your email:&lt;/label&gt;&lt;/div&gt;
+    &lt;div class="form-field block"&gt;&lt;input id="email" type="email" class="form-input"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="form form--stacked block-group"&gt;
+    &lt;div class="form-label block"&gt;&lt;label for="about"&gt;About you:&lt;/label&gt;&lt;/div&gt;
+    &lt;div class="form-field block"&gt;&lt;textarea id="about"&gt;&lt;/textarea&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="form form--stacked block-group"&gt;
+    &lt;div class="form-field block"&gt;
+      &lt;label class="form-control"&gt;&lt;input type="checkbox" name="agree"&gt; Yes, I agree&lt;/label&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_use_forms">use-forms()</h3>
+<div class="paragraph"><p>Определяет минимальный набор базовых классов для работы с формами, наследуя
+от абстрактных классов.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-forms()
+  +media(any)
+    .form
+      @extend $forms-form
+
+    .form-input
+      @extend $forms-input
+
+    .form-control
+      @extend $forms-control
+
+    .form-label
+      @extend $forms-label</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_form">$forms-form</h3>
+<div class="paragraph"><p>Контейнер элементов формы. Предназначен для совместной работы с модулем
+<code>blocks</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$forms-form
+  select[multiple]
+    height: auto</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_object">$forms-object</h3>
+<div class="paragraph"><p>Базовый класс элемента управления формы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$forms-object
+  display: inline-block                                                 // <b>&lt;1&gt;</b>
+  box-sizing: border-box                                                // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+все элементы управления — <code>inline-block</code>
+</p>
+</li>
+<li>
+<p>
+использование <code>box-sizing: border-box</code> упрощает стилизацию и устраняет
+несоответствия в размерах различных элементах между различными браузерами.
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_control">$forms-control</h3>
+<div class="paragraph"><p>Элемент управления формы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$forms-control
+  @extend $forms-object
+  input
+    vertical-align: middle                                              // <b>&lt;1&gt;</b>
+  &amp;[disabled]
+    -forms-disabled()</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+выравниваем по вертикали поля ввода внутри элемента управления.
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_input">$forms-input</h3>
+<div class="paragraph"><p>Поле ввода формы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$forms-input
+  @extend $forms-object
+  &amp;:focus
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+  &amp;[disabled]
+    -forms-disabled()</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_label">$forms-label</h3>
+<div class="paragraph"><p>Метка поля формы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>$forms-label
+  label
+    vertical-align: middle                                              // <b>&lt;1&gt;</b>
+    display: inline-block</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+если <code>&lt;label&gt;</code> внутри контейнера <code>form-label</code>, стараемся выровнять по
+вертикали независимо от количество строк в метке.
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_forms_disabled">-forms-disabled()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, настраивающий параметры отключенных элементов формы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-forms-disabled()
+  cursor: not-allowed</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_height">height</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределяет свойство <code>height</code>, добавляя поддержку в виде количества шагов.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'fn'                                                         // <b>&lt;1&gt;</b>
+@require 'size'                                                       // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>fn-has-important</code>
+</p>
+</li>
+<li>
+<p>
+<code>size</code>, <code>-size-steps-or-units()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_height_2">height</h3>
+<div class="paragraph"><p>Поддержка указания стандартного <code>height</code> в виде количества вертикальных
+шагов. В качестве дополнительного второго аргумента можно передать
+вычитаемую из результата поправку.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>height(v, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  height: -size-steps-or-units(sizes.vertical-step, v, a) important</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_icons">icons</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Определяет стандартный способ использования иконных шрифтов.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'font'                                                     // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>use-font-face()</code>
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Элемент, отображающий шрифтовую иконку, должен содержать следующие атрибуты:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+класс иконки для указания, что это элементы иконки (по умолчанию <code>icon</code>)
+</p>
+</li>
+<li>
+<p>
+модификатор <code>icon--семейство-иконок</code> для привязки к конкретному иконному
+  шрифту, если используется несколько иконных шрифтов
+</p>
+</li>
+<li>
+<p>
+<code>data-icon</code>, определяющий имя иконки.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Например:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;i class="icon icon--iconic" data-icon="save"&gt;&lt;/i&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>Имя класса иконок определяется переменной <code>icons-class</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>icons-class ?= 'icon'</code></pre>
+</div></div>
+<div class="paragraph"><p>Модуль определяет стандартный контейнер для хранения определений наборов
+икон, если это необходимо.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>icons ?= {}</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_use_icons">use-icons()</h3>
+<div class="paragraph"><p>Генерирует определение базового класса иконки.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-icons()
+  .{icons-class}[data-icon]
+    &amp;:before
+      position: relative
+      top: 1px
+      display: inline-block
+      speak: none
+      line-height: 1
+      font-style: normal
+      vertical-align: baseline
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
+    &amp;:empty:before
+      width 1em
+      text-align:center
+      box-sizing: content-box
+
+  for k,v in icons
+    use-icons-from(v)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_use_icons_from">use-icons-from()</h3>
+<div class="paragraph"><p>Генерирует набор правил для отображения иконок определенного иконного шрифта.</p></div>
+<div class="paragraph"><p>В случае, если хеш, определяющий набор иконок, содержит элемент <code>id</code>, его
+значение используется как модификатор стандартного класса иконки,
+определяемого переменной <code>icons-class</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-icons-from(set, icons...)
+  class = 'icon'
+  class += ('--' + set.id) if set.id
+
+  if set.font-file
+    use-font-face(set.font-family, set.font-file)
+
+  .{class}
+    font-family: set.font-family
+  if icons
+    for g in icons
+      c = set.icons[g]
+      .{class}[data-icon={g}]:before
+        content: c
+  else
+    for g, c in set.icons
+      .{class}[data-icon={g}]:before
+        content: c</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_icons_text_replace">icons-text-replace()</h3>
+<div class="paragraph"><p>Скрывает текст элемента иконки.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>icons-text-replace(enabled = true)
+  if enabled
+    font-size: 0
+    line-height: 0
+    &amp;:before
+      width: 1em
+      text-align: center</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linear_gradient">linear-gradient</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Модуль реализует вспомогательные функции для реализации градиентов.</p></div>
+<div class="paragraph"><p>Модуль использует набор вспомогательных функций <code>linear-gradient.js</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use('linear-gradient.js');</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_linear_gradient_2">linear-gradient()</h3>
+<div class="paragraph"><p>Создает линейный градиент с заданными стартовой позицией и произвольным
+набором точек смены цвета.</p></div>
+<div class="paragraph"><p>Использование:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>background: linear-gradient(top, red, green, blue)
+background: linear-gradient(bottom, red, green 50%, blue)
+background: linear-gradient(bottom, red, 50% green, blue)
+background: linear-gradient(bottom, red, 50% green, 90% white, blue)</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>linear-gradient(start, stops...)
+  error('color stops required') unless length(stops)
+
+  unquote('linear-gradient(' + join(', ',arguments) + ')')</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_linear_gradient_image">linear-gradient-image()</h3>
+<div class="paragraph"><p>Генерирует изображение для указанного линейного градиента в виде Data URI.
+Это позволяет определять непосредственно в CSS простые градиенты для
+браузеров, не поддерживающих градиенты CSS3.</p></div>
+<div class="paragraph"><p>Пример использования:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.nav {
+   background: linear-gradient-image(80px, white, black);
+   background: linear-gradient(top, white, black);
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>linear-gradient-image(start, stops...)
+  error('node-canvas is required for linear-gradient-image()') unless has-canvas
+  stops = stops[0] if length(stops) == 1
+  error('gradient image size required') unless start[0] is a 'unit'
+  size = start[0]
+  start = start[1] or 'top'
+  grad = -linear-gradient-create-image(size, start)
+  stops = -linear-gradient-normalize-stops(stops)
+  -linear-gradient-add-stop(grad, stop[0], stop[1]) for stop in stops
+  'url(%s)' % -linear-gradient-data-uri(grad)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_linear_gradient_post_in_stops">-linear-gradient-post-in-stops()</h3>
+<div class="paragraph"><p>Вспомогательный макрос.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-linear-gradient-pos-in-stops(i, stops)
+  len = length(stops)
+  if len - 1 == i
+    100%
+  else if i
+    unit(i / len * 100, '%')
+  else
+    0</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_linear_gradient_normalize_stops">-linear-gradient-normalize-stops()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, нормализация color stops:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(color pos) &#8594; (pos color)
+</p>
+</li>
+<li>
+<p>
+(color) &#8594; (implied-pos color)
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-linear-gradient-normalize-stops(stops)
+  stops = clone(stops)
+  for stop, i in stops
+    if length(stop) == 1
+      color = stop[0]
+      stop[0] = -linear-gradient-pos-in-stops(i, stops)
+      stop[1] = color
+    else if typeof(stop[1]) == 'unit'
+      pos = stop[1]
+      stop[1] = stop[0]
+      stop[0] = pos
+  stops</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_margin">margin</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределяет свойства <code>margin</code>, добавляя поддержку размеров с
+использованием вертикального и горизонтального шагов.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'fn'                                                         // <b>&lt;1&gt;</b>
+@require 'size'                                                       // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>fn-has-important()</code>
+</p>
+</li>
+<li>
+<p>
+<code>size</code>, <code>-size-steps-or-units()</code>, <code>-size-offsets()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_margin_top">margin-top</h3>
+<div class="paragraph"><p>Переопределяет <code>margin-top</code>, допуская использование количества вертикальных
+шагов <code>m</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>margin-top(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-top: -size-steps-or-units(sizes.vertical-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_margin_bottom">margin-bottom</h3>
+<div class="paragraph"><p>Переопределяет <code>margin-bottom</code>, допуская использование количества
+вертикальных шагов <code>m</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>margin-bottom(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-bottom: -size-steps-or-units(sizes.vertical-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_margin_left">margin-left</h3>
+<div class="paragraph"><p>Переопределяет <code>margin-left</code>, допуская использование количества
+горизонтальных шагов <code>m</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>margin-left(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-left: -size-steps-or-units(sizes.horizontal-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_margin_right">margin-right</h3>
+<div class="paragraph"><p>Переопределяет <code>margin-right</code>, допуская использование количества
+горизонтальных шагов <code>m</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>margin-right(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-right: -size-steps-or-units(sizes.horizontal-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_margin_2">margin</h3>
+<div class="paragraph"><p>Переопределяет <code>margin</code>, допуская использование количества горизонтальных
+и вертикальных шагов в случае, если не указана единица измерения.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>margin()
+  margin: -size-offsets(arguments)</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_media">media</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Модуль позволяет определять код для различных медиа-вариантов. Он может быть
+использован для решения следующих задач:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+определения кода медиа-вариантов;
+</p>
+</li>
+<li>
+<p>
+генерация кода, относящегося к  медиа-варианту;
+</p>
+</li>
+<li>
+<p>
+генерация кода для одного или нескольких legacy-браузеров.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Модуль может работать в двух режимах:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+режим непосредственной генерации сразу выводит генерируемый код
+</p>
+</li>
+<li>
+<p>
+режим вывода медиа-варианта, выводит только код, соответствующий
+  запросу, указываемому переменной media-query.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>В первом случае генерируемый код содержит большое количество одинаковых
+инструкций <code>@media</code>, увеличивающих размер итогового CSS.</p></div>
+<div class="paragraph"><p>Во втором случае код вообще не содержит инструкций <code>@media</code> и предназначен
+для включения в соответствующую инструкцию.</p></div>
+<div class="sect2">
+<h3 id="_media_query">media-query</h3>
+<div class="paragraph"><p>Переменная <code>media-query</code> определяет медиа-запрос, используемый для генерации
+кода во втором варианте. Она может принимать следующие значения:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+строка медиа-запроса — генерируется код, соответствующий запросу;
+</p>
+</li>
+<li>
+<p>
+<code>false</code> — режим вывода медиа-варианта отключен;
+</p>
+</li>
+<li>
+<p>
+<code>none</code>  - генерируется код, соответствующий.
+  определяемому переменной <code>media-legacy</code>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>По умолчанию переменная имеет значение <code>false</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>media-query = false</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_media_2">media()</h3>
+<div class="paragraph"><p>В качестве аргумента получает строку media-query. Рекомендуется определять
+такие строки в виде переменных и передавать при вызове макроса переменную.
+Передаваемый в макрос блок кода определяет содержимое медиа-варианта.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>media(query = any, legacy = false)
+  if media-query != false                                             // <b>&lt;1&gt;</b>
+    {block} if media-query == query or media-query == legacy
+  else
+    if query == any                                                   // <b>&lt;2&gt;</b>
+      {block}
+    else
+      @media query
+        {block}</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+если указан медиа-вариант для вывода, выводим только его
+</p>
+</li>
+<li>
+<p>
+если указан вариант по умолчанию, просто выводим соответствующий код
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mq">mq</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Определяет функции, упрощающие генерация условий media query. Помимо этого,
+определяет стандартный контейнер для декларирования media query, используемых
+приложением.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq ?= {}</code></pre>
+</div></div>
+<div class="paragraph"><p>Рекомендуется определяеть все медиа-запросы, используемые в приложении, путем
+создания элементов в хеше <code>mq</code> и в дальнейшем ссылаться на эти элементы. Это
+позволяет уменьшить количество переменных в глобальном пространстве имен и
+дает возможность итерирования по используемым медиа-запросам.</p></div>
+<div class="paragraph"><p>Например:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq.desktop = mq-wider(1024px)                                    // <b>&lt;1&gt;</b>
+
++media(mq.desktop)                                               // <b>&lt;2&gt;</b>
+  .menu
+    position: absolute</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+в конфигурации  приложения
+</p>
+</li>
+<li>
+<p>
+в таблице стилей
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_mq_wider">mq-wider()</h3>
+<div class="paragraph"><p>Определяет медиа-запрос для screen, соответствующий ширине больше указанной.
+Если единицы измерения не указаны, используются пикселы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq-wider(l)
+  return -mq-query('screen', 'min-width', l)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_mq_narrower">mq-narrower()</h3>
+<div class="paragraph"><p>Определяет медиа-запрос для screen, соответствующий ширине меньше указанной.
+Если единицы измерения не указаны, используются пикселы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq-narrower(l)
+  return -mq-query('screen', 'max-width', l)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_mq_longer">mq-longer()</h3>
+<div class="paragraph"><p>Определяет медиа-запрос для screen, соответствующий высоте больше указанной.
+Если единицы измерения не указаны, используются пикселы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq-longer(l)
+  return -mq-query('screen', 'min-height', l)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_mq_shorter">mq-shorter()</h3>
+<div class="paragraph"><p>Определяет медиа-запрос для screen, соответствующий высоте меньше указанной.
+Если единицы измерения не указаны, используются пикселы.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mq-shorter(l)
+  return -mq-query('screen', 'max-height', l)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_mq_query">-mq-query()</h3>
+<div class="paragraph"><p>Вспомогательная функция, генерирует условие media-query.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-mq-query(m, p, l)
+  l = '' + l + 'px' if '' == unit(l)
+  return m + 'and (' + p + ' : ' + s + ')'</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_normalize">normalize</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Нормализация элементов страницы для различных браузеров.</p></div>
+<div class="paragraph"><p>Зависимости модуля:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'reset'                                                        // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>reset</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_use_normalize">use-normalize()</h3>
+<div class="paragraph"><p>Выполняет полную нормализацию.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-normalize()
+  +media(any)
+    normalize-document()
+    normalize-html5()
+    normalize-links()
+    normalize-content()
+    normalize-forms()</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_normalize_document">normalize-document()</h3>
+<div class="paragraph"><p>Выполняет нормализацию настроек документа:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>normalize-document()
+  html
+    font-size: 100%                                                     // <b>&lt;1&gt;</b>
+    -ms-text-size-adjust: 100%                                          // <b>&lt;2&gt;</b>
+    -webkit-text-size-adjust: 100%
+  body
+    margin: 0                                                           // <b>&lt;3&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+проблемы в IE7 если <code>font-size</code> для <code>body</code> в <code>em</code>
+</p>
+</li>
+<li>
+<p>
+блокируем подстройку размера текста в iOS после изменения ориентации
+    устройства без отключения пользовательского масштабирования
+</p>
+</li>
+<li>
+<p>
+отступы для документа в IE7
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_normalize_html5">normalize-html5()</h3>
+<div class="paragraph"><p>Выполняет нормализацию элементов HTML5.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>normalize-html5()
+  article                                                               // <b>&lt;1&gt;</b>
+  aside
+  figcaption
+  figure
+  footer
+  header
+  hgroup
+  nav
+  section
+  details
+  summary
+  main
+    display: block
+
+  audio
+  canvas
+  progress
+  video
+    display:        inline-block                                        // <b>&lt;2&gt;</b>
+    vertical-align: baseline                                            // <b>&lt;3&gt;</b>
+
+  audio:not([controls])
+    display: none                                                       // <b>&lt;4&gt;</b>
+    height:  0                                                          // <b>&lt;5&gt;</b>
+
+  [hidden]
+  template
+    display: none !important                                            // <b>&lt;6&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+все элементы в IE8-9, <code>&lt;details&gt;</code> и <code>&lt;summary&gt;</code> в IE10-11/FF,
+    <code>&lt;main&gt;</code> в IE11
+</p>
+</li>
+<li>
+<p>
+<code>inline-block</code> не определен в IE8-9
+</p>
+</li>
+<li>
+<p>
+проблемы с выравниванием в GC/FF/O
+</p>
+</li>
+<li>
+<p>
+не показываем <code>&lt;audio&gt;</code> без элементов управления
+</p>
+</li>
+<li>
+<p>
+корректировка высоты в IOS5
+</p>
+</li>
+<li>
+<p>
+<code>hidden</code> в IE8-10, <code>&lt;template</code> в IE8-11/SF/FF&lt;22
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_normalize_links">normalize-links()</h3>
+<div class="paragraph"><p>Выполняет нормализацию отображения ссылок.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>normalize-links()
+  a
+    background: transparent                                             // <b>&lt;1&gt;</b>
+  a:active
+  a:hover
+    outline: 0                                                          // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+серый фон для активных ссылок в IE10
+</p>
+</li>
+<li>
+<p>
+читаемость ссылок в фокусе для всех браузеров
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_normalize_content">normalize-content</h3>
+<div class="paragraph"><p>Выполняет нормализацию отображения контентных элементов:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>normalize-content()
+  abbr[title]
+    border-bottom: 1px dotted                                           // <b>&lt;1&gt;</b>
+
+  b
+  strong
+    font-weight: bold                                                   // <b>&lt;2&gt;</b>
+
+  dfn
+    font-style: italic                                                  // <b>&lt;3&gt;</b>
+
+  mark
+    background: #ff0                                                    // <b>&lt;4&gt;</b>
+    color: #000
+
+  small
+    font-size: 80%                                                      // <b>&lt;5&gt;</b>
+
+  sub
+  sup
+    font-size: 75%                                                      // <b>&lt;6&gt;</b>
+    line-height: 0
+    position: relative
+    vertical-align: baseline
+  sup
+    top: -0.5em
+  sub
+    bottom: -0.25em
+
+  img
+    border: 0                                                           // <b>&lt;7&gt;</b>
+
+  svg:not(:root)
+    overflow: hidden                                                    // <b>&lt;8&gt;</b>
+
+  hr
+    -moz-box-sizing: content-box                                        // <b>&lt;9&gt;</b>
+    box-sizing: content-box
+    height: 0
+
+  pre
+    overflow: auto
+
+  code
+  kbd
+  pre
+  samp
+    font-size: 1em                                                      // <b>&lt;10&gt;</b>
+
+  table
+    border-collapse: collapse                                           // <b>&lt;11&gt;</b>
+    border-spacing: 0
+  td
+  th
+    padding: 0
+
+  nav &gt; ul
+    list-style: none</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+стилизация <code>&lt;abbr&gt;</code> отсутствует в IE8-11/SF/GC
+</p>
+</li>
+<li>
+<p>
+<code>bolder</code> в FF4+/SF/GC
+</p>
+</li>
+<li>
+<p>
+не стилизуется в SF/GC
+</p>
+</li>
+<li>
+<p>
+не поддерживаетсяв IE8-9
+</p>
+</li>
+<li>
+<p>
+единый размер <code>&lt;small&gt;</code> для всех браузеров
+</p>
+</li>
+<li>
+<p>
+<code>&lt;sub&gt;</code> и <code>&lt;sup&gt;</code> не должны влиять на <code>line-height</code>
+</p>
+</li>
+<li>
+<p>
+изображения в ссылках в IE8-10
+</p>
+</li>
+<li>
+<p>
+корректировка <code>overflow</code> в IE10-11
+</p>
+</li>
+<li>
+<p>
+<code>&lt;hr&gt;</code> отображается по разному FF и всеми остальными
+</p>
+</li>
+<li>
+<p>
+устанавливаем единый размер шрифта для всех браузеров
+</p>
+</li>
+<li>
+<p>
+удаляем отступы для таблиц
+</p>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="_normalize_forms">normalize-forms</h3>
+<div class="paragraph"><p>Выполняет нормализацию форм.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>normalize-forms()
+  button
+  input
+  optgroup
+  select
+  textarea
+    color: inherit                                                      // <b>&lt;1&gt;</b>
+    font: inherit                                                       // <b>&lt;2&gt;</b>
+    margin: 0                                                           // <b>&lt;3&gt;</b>
+
+  button
+    overflow: visible                                                   // <b>&lt;4&gt;</b>
+
+  button
+  select
+    text-transform: none                                                // <b>&lt;5&gt;</b>
+
+  button
+  html input[type="button"]
+  input[type="reset"]
+  input[type="submit"]
+    -webkit-appearance: button                                          // <b>&lt;6&gt;</b>
+    cursor: pointer                                                     // <b>&lt;7&gt;</b>
+
+  button[disabled]
+  html input[disabled]
+    cursor: default                                                     // <b>&lt;8&gt;</b>
+
+  button::-moz-focus-inner
+  input::-moz-focus-inner
+    border: 0                                                           // <b>&lt;9&gt;</b>
+    padding: 0
+
+  input
+    line-height: normal                                                 // <b>&lt;10&gt;</b>
+
+  input[type="checkbox"]
+  input[type="radio"]
+    box-sizing: border-box                                              // <b>&lt;11&gt;</b>
+    padding: 0                                                          // <b>&lt;12&gt;</b>
+
+  input[type="number"]::-webkit-inner-spin-button                       // <b>&lt;13&gt;</b>
+  input[type="number"]::-webkit-outer-spin-button
+    height: auto
+
+  input[type="search"]
+    -webkit-appearance: textfield                                       // <b>&lt;14&gt;</b>
+    -moz-box-sizing: content-box
+    -webkit-box-sizing: content-box                                     // <b>&lt;15&gt;</b>
+    box-sizing: content-box
+  input[type="search"]::-webkit-search-cancel-button
+  input[type="search"]::-webkit-search-decoration
+    -webkit-appearance: none                                            // <b>&lt;16&gt;</b>
+
+  legend
+    border: 0                                                           // <b>&lt;17&gt;</b>
+    padding: 0                                                          // <b>&lt;18&gt;</b>
+
+  textarea
+    overflow: auto                                                      // <b>&lt;19&gt;</b>
+
+  optgroup
+    font-weight: bold                                                   // <b>&lt;20&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+не неследуется цвет, влияет на цвет неактивных элементов
+</p>
+</li>
+<li>
+<p>
+корректные свойства шрифта не наследуются
+</p>
+</li>
+<li>
+<p>
+отступы устанавливаются по-разному в FF4/SF/GC
+</p>
+</li>
+<li>
+<p>
+в IE8-11 выставляется <code>overflow: hidden</code>
+</p>
+</li>
+<li>
+<p>
+наследование: <code>&lt;button&gt;</code> в FF/IE8-11/O, <code>&lt;select&gt;</code> в FF
+</p>
+</li>
+<li>
+<p>
+ошибка WebKit в Android 4.0.*, медийные элементы управления,
+    невозможность стилизовать кликабельные &lt;input&gt; в iOS
+</p>
+</li>
+<li>
+<p>
+единообразие типа курсора между кнопками с изображениями и остальными
+</p>
+</li>
+<li>
+<p>
+курсор для отключенных элементов
+</p>
+</li>
+<li>
+<p>
+внутренний отступ и обрамление для элементов в фокусе в FF
+</p>
+</li>
+<li>
+<p>
+несовместимость в FF4+
+</p>
+</li>
+<li>
+<p>
+<code>content-box</code> в IE8-10
+</p>
+</li>
+<li>
+<p>
+избыточный отступ в IE8-10
+</p>
+</li>
+<li>
+<p>
+высота в GC
+</p>
+</li>
+<li>
+<p>
+<code>appearance: searchfield</code> в SF/GC
+</p>
+</li>
+<li>
+<p>
+<code>box-sizing: border-box</code> в SF/GC
+</p>
+</li>
+<li>
+<p>
+внутренний отступ и кнопка отмена поиска в SF/GC в OS X
+</p>
+</li>
+<li>
+<p>
+в IE8-11 не наследуется <code>color</code>
+</p>
+</li>
+<li>
+<p>
+удаляем внутренний отступ по умолчанию
+</p>
+</li>
+<li>
+<p>
+вертикальный скроллбар в IE8-11
+</p>
+</li>
+<li>
+<p>
+везде выделяет <code>&lt;optgroup&gt;</code>
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_overflow">overflow</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределяет свойство <code>overflow</code> для поддержки сокращенного текста</p></div>
+<div class="paragraph"><p>К стандартным значениям свойства добавляется значение <code>ellipsis</code>, приводящее
+к выводу сокращенного текста.</p></div>
+<div class="sect2">
+<h3 id="_overflow_2">overflow()</h3>
+<div class="paragraph"><p>Переопределяет свойство CSS <code>overlow</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>overflow()
+  if arguments[0] == ellipsis
+    overflow: hidden
+    text-overflow: ellipsis
+  else
+    overflow: arguments</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_padding">padding</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределяет свойства <code>padding</code>, добавляя поддержку размеров с
+использованием вертикального и горизонтального шагов.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'fn'                                                         // <b>&lt;1&gt;</b>
+@require 'size'                                                       // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>fn-has-important()</code>
+</p>
+</li>
+<li>
+<p>
+<code>size</code>, <code>-size-steps-or-units()</code>, <code>-size-offsets()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_padding_top">padding-top</h3>
+<div class="paragraph"><p>Переопределяет <code>padding-top</code>, допуская использование количества вертикальных
+шагов <code>p</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>padding-top()
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-top: -size-steps-or-units(sizes.vertical-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_padding_bottom">padding-bottom</h3>
+<div class="paragraph"><p>Переопределяет <code>padding-bottom</code>, допуская использование количества
+вертикальных шагов <code>p</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>padding-bottom()
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-bottom: -size-steps-or-units(sizes.vertical-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_padding_left">padding-left</h3>
+<div class="paragraph"><p>Переопределяет <code>padding-left</code>, допуская использование количества
+вертикальных шагов <code>p</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>padding-left(p, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-left: -size-steps-or-units(sizes.horizontal-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_padding_right">padding-right</h3>
+<div class="paragraph"><p>Переопределяет <code>padding-right</code>, допуская использование количества
+вертикальных шагов <code>p</code> и поправки <code>a</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>padding-right(p, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-right: -size-steps-or-units(sizes.horizontal-step, v, a) important</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_padding_2">padding</h3>
+<div class="paragraph"><p>Переопределяет <code>padding</code>, допуская использование количества горизонтальных
+и вертикальных шагов в случае, если не указана единица измерения.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>padding()
+  padding: -size-offsets(arguments)</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_position">position</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Определяет набор макросов для позиционирования элементов.</p></div>
+<div class="sect2">
+<h3 id="_fixed">fixed</h3>
+<div class="paragraph"><p>Задает фиксированное позиционирование.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>fixed()
+  -position-is('fixed', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_absolute">absolute</h3>
+<div class="paragraph"><p>Задает абсолютное позиционирование.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>absolute()
+  -position-is('absolute', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_relative">relative</h3>
+<div class="paragraph"><p>Задает относительное позиционирование.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>relative()
+  -position-is('relative', arguments)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_centered">centered</h3>
+<div class="paragraph"><p>Центрирует элемент по горизонтали.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>centered(enabled = true)
+  if enabled
+    margin-left: auto
+    margin-right: auto</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_position_is">-position-is()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, выполняет позиционирование элемента.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-position-is(type, args)
+  i = 0
+  position: unquote(type)
+  for j in (1..4)
+    if length(args) &gt; i
+      {args[i]}: args[i + 1] is a 'unit' ? args[i += 1] : 0
+    i += 1</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reset">reset</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Сброс стилей элементов.</p></div>
+<div class="sect2">
+<h3 id="_use_reset">use-reset()</h3>
+<div class="paragraph"><p>Выполняет сброс всех контентных элементов.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use-reset()
+  article, aside, figcaption, figure, footer, header, hgroup, nav, section,
+  details, summary, main, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+  pre, a, abbr, address, code, del, dfn, em, img, dl, dt, dd, ol, ul,
+  li, fieldset, form, label, legend, caption, tbody, tfoot, thead, tr
+    reset: box-model
+  nav
+    ol, ul
+      reset: list
+  h1,h2,h3,h4,h5,h6
+    font-size: 100%
+    font-weight: normal</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_reset_2">reset()</h3>
+<div class="paragraph"><p>В зависимости от передаваемых параметров выполняет сброс отступов, списочного
+стиля или шрифтовы настроек.</p></div>
+<div class="paragraph"><p>Пример использования:</p></div>
+<div class="paragraph"><p>ul, li
+  reset: box-model list-style</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>reset()
+  for a in arguments
+    if a == box-model
+      -reset-box-model()
+    if a == list
+      -reset-list()
+    if a == font
+      -reset-font()</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_reset_box_model">-reset-box-model()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, сбрасывает все отступы и обрамление в 0.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-reset-box-model()
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_reset_list">-reset-list()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, сбрасывает стили списка.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-reset-list()
+  list-style: none</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_reset_font">-reset-font()</h3>
+<div class="paragraph"><p>Вспомогательный макрос, сбрасывает шрифтовые стили.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-reset-font()
+  font-weight: inherit
+  font-style: inherit
+  font-family: inherit
+  font-size: 100%
+  vertical-align: baseline</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_size">size</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Модуль позволяет использовать фиксированный шаг для задания вертикальных и
+горизонтальных размеров и отступов. Использование стандартного вертикального
+шага, в частности, способствует выдерживанию</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'fn'                                                         // <b>&lt;1&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>fn-has-important()</code>
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Модуль определяет стандартный контейнер <code>sizes</code>, предназначенный для
+определения размерных констант. Модель определяет две стандартные константы:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>sizes = {
+  vertical-step: 8px,                                                   // <b>&lt;1&gt;</b>
+  horizontal-step: 10px                                                 // <b>&lt;2&gt;</b>
+}</code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+вертикальный базовый шаг
+</p>
+</li>
+<li>
+<p>
+горизонтальный базовый шаг
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_size_vertical">size-vertical()</h3>
+<div class="paragraph"><p>Вычисляет вертикальный размер по переданному количеству шагов <code>n</code> и поправке
+<code>a</code>. Если в качестве количества шагов передано значение с единицей измерения,
+просто возвращает это значение.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>size-vertical(n, a = 0)
+  return -size-steps-or-units(sizes.vertical-step, n, a)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_size_horizontal">size-horizontal()</h3>
+<div class="paragraph"><p>Вычисляет горизонтальный размер по переданному количеству шагов <code>n</code> и поправке
+<code>a</code>. Если в качестве количества шагов передано значение с единицей измерения,
+просто возвращает это значение.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>size-horizontal(n, a = 0)
+  return -size-steps-or-units(sizes.vertical-step, n, a)</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_size_steps_or_units">-size-steps-or-units()</h3>
+<div class="paragraph"><p>Вычисляет смещение на основании величины шага <code>s</code>, количества шагов <code>n</code> и
+поправки <code>a</code>. В отличие от функции <code>-step-size()</code> допускает передачу в
+качестве аргумента <code>n</code> явного размера в какой-либо единице измерения. В этом
+случае расчет не производится и функции просто возвращает это значение.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-size-steps-or-units(s, n, a = 0)
+  if n == auto || n == 0
+    return n
+  else
+    if '' == unit(n)
+      if a != 0
+        return s*n - a
+      else
+        return s*n
+    else
+      return n</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_size_offsets">-size-offsets()</h3>
+<div class="paragraph"><p>Заменяет количество шагов в наборе отступов на соответствующие вертикальные
+или горизонтальные размеры.</p></div>
+<div class="paragraph"><p>Функция не допускает указания поправок для сохранения совместимости со
+стандартным CSS.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-size-offsets()
+  r = unquote('')
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+
+  for n, i in arguments
+    if n == !important
+      push r n
+    else
+      if i == 0 or i == 2
+        push(r, -size-steps-or-units(sizes.vertical-step, n))
+      else
+        push(r, -size-steps-or-units(sizes.horizontal-step, n))
+
+  return r important</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_text">text</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Реализует настройку геометрии текстовых элементов с помощью так называемых
+текстовых стилей — предопределенных наборов свойств текста.</p></div>
+<div class="paragraph"><p>Текстовый стиль представляет собой хэш-переменную, содержащую следующие
+элементы:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<code>font-family</code>  — семейство шрифтов
+</p>
+</li>
+<li>
+<p>
+<code>font-size</code>    — размер шрифта
+</p>
+</li>
+<li>
+<p>
+<code>line-height</code>  — высота строки шрифта
+</p>
+</li>
+<li>
+<p>
+<code>font-style</code>   — стиль шрифта (опционально)
+</p>
+</li>
+<li>
+<p>
+<code>font-variant</code> — вариант шрифта (опционально)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Настройка типографики элементов с помощью набора предопределенных стилей,
+высота строки в которых кратна выбранному вертикальному шагу, обеспечивает
+простой и удобный способ поддержки общего вертикального ритма страницы.</p></div>
+<div class="paragraph"><p>Модуль определяет стандартный контейнер для текстовых стилей, <code>text</code>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text ?= {}</code></pre>
+</div></div>
+<div class="paragraph"><p>Пример определения стиля:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text.sans-normal = {
+  font-family: sans-serif,
+  font-size:   16px,
+  line-height: 24px
+}</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_text_style">text-style()</h3>
+<div class="paragraph"><p>Применяет настройки текстового стиля к элементу.</p></div>
+<div class="paragraph"><p>В качестве параметра <code>style</code> должна быть передана хэш-переменная,
+соответствующая описанию стиля. Дополнительно можно передать необязательный
+параметр <code>adjust</code>, позволяющий скорректировать высоту строки стиля.</p></div>
+<div class="paragraph"><p>Пример использования:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>.content h2
+  text-style: text.sans-large
+.button
+  text-style: text.sans-normal 1</code></pre>
+</div></div>
+<div class="paragraph"><p>Реализация:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text-style(style, adjust = 0)
+  text-metrics: style adjust
+  font-family:  style.font-family  if style.font-family
+  font-style:   style.font-style   if style.font-style
+  font-weight:  style.font-weight  if style.font-weight
+  font-variant: style.font-variant if style.font-variant
+  text-transform: style.text-transform if style.text-transform</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_text_style_metrics">text-style-metrics()</h3>
+<div class="paragraph"><p>Макро аналогично <code>text-style()</code>, но применяет только настройки, связанные с
+метрикой текста: <code>font-size</code> и <code>line-height</code>. Таким образом, можно избежать
+излишнего указания семейства шрифтов, наследуя его от родительского элемента.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text-metrics(style, adjust = 0)
+  font-size:   style.font-size    if style.font-size
+  line-height: style.line-height + size-vertical(adjust) if style.line-height</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_text_hidden">text-hidden()</h3>
+<div class="paragraph"><p>Скрывает текстовое содержимое элемента.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>text-hidden(enabled = true)
+  if enabled
+    text-indent: 101%
+    white-space: nowrap
+    overflow: hidden</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vendor">vendor</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Модуль обеспечивает работу с префиксами вендоров.
+Реализация: nib (<a href="http://visionmedia.github.io/nib/">http://visionmedia.github.io/nib/</a>).</p></div>
+<div class="paragraph"><p>Использует набор вспомогательных фукнций <code>vendor.js</code>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>use('vendor.js');</code></pre>
+</div></div>
+<div class="paragraph"><p>Набор поддерживаемых префиксов:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>vendor-prefixes ?= webkit moz o ms official</code></pre>
+</div></div>
+<div class="sect2">
+<h3 id="_vendor_2">vendor</h3>
+<div class="paragraph"><p>Поддержка префиксов для указанного свойства или набора аргументов с
+возможным указанием применяемых или исключаемых префиксов.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>vendor(prop, args, only = null, ignore = null, vendor-property = true)
+  need_normalize = !vendor-property or prop in ('transition' 'transition-property' 'border-image' 'border-image-slice')
+  for prefix in vendor-prefixes
+    unless (only and !(prefix in only)) or (ignore and prefix in ignore)
+      if official == prefix
+        if need_normalize
+          {prop}: normalize(prop,('%s' % args))
+        else
+          {prop}: args
+      else
+        newprop = prop
+        newprop = '-' + prefix + '-' + prop if vendor-property
+
+        if need_normalize
+          {newprop}: normalize(prop,('%s' % args),prefix)
+        else
+          {newprop}: args</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_vendor_value">vendor-value</h3>
+<div class="paragraph"><p>Применяет префикс к значению.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>vendor-value(arg, only = null, ignore = null)
+  prop = current-property[0]
+  for prefix in vendor-prefixes
+    unless (only and !(prefix in only)) or (ignore and prefix in ignore) or official == prefix
+      add-property(prop, '-%s-%s' % (prefix arg))
+  arg</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_width">width</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Переопределяет свойство <code>width</code>, добавляя поддержку в виде количества шагов.</p></div>
+<div class="paragraph"><p>Зависимости:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@require 'fn'                                                         // <b>&lt;1&gt;</b>
+@require 'size'                                                       // <b>&lt;2&gt;</b></code></pre>
+</div></div>
+<div class="colist arabic"><ol>
+<li>
+<p>
+<code>fn-has-important</code>
+</p>
+</li>
+<li>
+<p>
+<code>size</code>, <code>-size-steps-or-units()</code>
+</p>
+</li>
+</ol></div>
+<div class="sect2">
+<h3 id="_width_2">width</h3>
+<div class="paragraph"><p>Поддержка указания стандартного <code>width</code> в виде количества горизонтальных
+шагов. В качестве дополнительного второго аргумента можно передать
+вычитаемую из результата поправку.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>width(v, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  width: -size-steps-or-units(sizes.horizontal-step, v, a) important</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2014-08-08 09:44:48 MSK
+</div>
+</div>
+</body>
+</html>

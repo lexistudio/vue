@@ -4,7 +4,7 @@
     <div class="page">
       <div class="news">
         <div class="news__item" v-for="(item, index) in list" :key="index">
-          {{ item.id }}
+          {{ item }}
         </div>
       </div>
     </div>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  var header = require("./app-head.vue");
+  var header = require("../header/template.vue");
 
   module.exports = {
     data: function () {
@@ -38,17 +38,3 @@
     }
   }
 </script>
-
-<style>
-  .news {
-    border: 1px solid #000;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .news__item {
-    border: 1px solid #000;
-    padding: 10px;
-    box-sizing: border-box;
-    width: 20%;
-  }
-</style>

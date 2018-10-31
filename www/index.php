@@ -5,23 +5,13 @@
   <title>tenzer</title>
   <meta name="description" content="tenzer">
   <meta name="keywords" content="tenzer">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-    .page {
-      width: 1350px;
-      margin: auto;
-    }
-  </style>
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-  <div id="app">
+  <div id="app" :class="{ grid: isActiveGrid }">
     <router-view></router-view>
   </div>
 
-  <script src="js/build.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

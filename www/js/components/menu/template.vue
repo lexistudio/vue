@@ -6,8 +6,8 @@
       </router-link>
     </li>
     <li class="menu__li">
-      <router-link to="/news" class="menu__a">
-        Новости
+      <router-link to="/blog" class="menu__a">
+        Блог
       </router-link>
     </li>
     <li class="menu__li">

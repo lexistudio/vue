@@ -1,0 +1,2397 @@
+= bare
+
+Минималистичный набор макросов для Stylus.
+
+-----------------------------------------------------------------------------
+@require 'blocks'
+@require 'buttons'
+@require 'clearfix'
+@require 'color'
+@require 'css3'
+@require 'display'
+@require 'fn'
+@require 'font'
+@require 'forms'
+@require 'height'
+@require 'icons'
+@require 'linear-gradient'
+@require 'margin'
+@require 'media'
+@require 'mq'
+@require 'normalize'
+@require 'overflow'
+@require 'padding'
+@require 'position'
+@require 'reset'
+@require 'size'
+@require 'text'
+@require 'vendor'
+@require 'width'
+@require 'webfont'
+-----------------------------------------------------------------------------
+
+== index
+
+Загрузчик модулей библиотеки.
+
+=== use-bare()
+
+Выполняет генерацию классов для модулей библиотеки.
+
+-----------------------------------------------------------------------------
+use-bare()
+  use-normalize()
+  use-reset()
+  use-blocks()
+-----------------------------------------------------------------------------
+
+== block
+
+Реализует минимальную систему классов для построения макетов, в том числе
+основанных на типографских сетках.
+
+Базовая реализация: http://arnaudleray.github.io/pocketgrid/[PocketGrid].
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'css3'                                                         // <1>
+@require 'clearfix'                                                     // <2>
+@require 'size'                                                         // <3>
+-----------------------------------------------------------------------------
+
+<1> `box-sizing()`
+<2> `clearfix()`
+<3> `size-vertical()`
+
+
+=== use-blocks()
+
+Использование:
+
+-----------------------------------------------------------------------------
+use-blocks()                                                         // <1>
+-----------------------------------------------------------------------------
+
+<1> определяет классы системы блоков.
+
+Модуль определяет два класса:
+
+- `block-group` — группа блоков, используемая как контейнер
+- `block` — собственно, контентный блок
+
+В терминологии сеток `block-group` соответствует сетке или ряду сетки,
+`block` — ячейке сетки.
+
+Реализация:
+
+-----------------------------------------------------------------------------
+use-blocks()
+  +media(any)
+    .block-group
+    .block
+    .block-group:after
+    .block:after
+    .block-group:before
+    .block:before
+      box-sizing: border-box                                            // <1>
+
+    .block-group
+      list-style-type: none                                             // <2>
+      padding: 0
+      margin:  0
+      clearfix: true
+
+    .block-group > .block-group                                         // <3>
+      clear: none
+      float: left
+      margin: 0 !important
+
+    .block
+      float: left
+      width: 100%                                                       // <4>
+-----------------------------------------------------------------------------
+
+<1> модуль использует `box-sizing: border-box`, работает в IE>8. Для IE7
+    необходимо использовать polyfill.
+
+<2> если контейнер является списком, на всякий случай сбрасываем стилизацию
+    списка.
+
+<3> допускается вложение контейнера непосредственно в другой контейнер
+    при условии, что контейнер не использует отступы.
+
+<4> по умолчанию все блоки имеют ширину 100% (mobile first).
+
+
+=== block-gutter()
+
+Макрос `block-gutter` позволяет установить промежуток между блоками группы
+блоков.
+
+Использование:
+
+-----------------------------------------------------------------------------
+
+.layout.block-group
+  block-gutter: 20px                                                 // <1>
+
+ .showcase.block-group
+   block-gutter: 20px, 2                                             // <2>
+
+ .showcase--aligned.block-group
+   block-gutter: 20px, 2, left                                       // <3>
+
+-----------------------------------------------------------------------------
+
+<1> горизонтальный отступ 20px.
+<2> горизонтальный отступ 20px, вертикальный — 2 текстовых линии.
+<3> аналогично, но с выравниванием отступов влево (может решить проблему
+    горизонтального скроллинга, если она возникает).
+
+По умолчанию используется центральное выравнивание блоков, т.н. общий отступ
+между блоками формируется половинными внутренними отступами блоков с каждой
+стороны.
+
+При вызове можно указать горизонтальный и вертикальный отступы.
+
+Реализация:
+
+-----------------------------------------------------------------------------
+blocks-gutter(horizontal = 0, vertical = 0, align = center)
+  -blocks-gutter-group(horizontal, vertical, align)
+  & > .block
+    -blocks-gutter-block(horizontal, vertical, align)
+
+-blocks-gutter-group(horizontal, vertical, align)                      // <1>
+  vertical = size-vertical(vertical)
+  if horizontal > 0
+    if align == center
+      margin-left:  ( 0 - horizontal/2 )
+      margin-right: ( 0 - horizontal/2 )
+    if align == left
+      margin-left:  ( 0 - horizontal )
+      margin-right: 0
+  if vertical > 0
+    if align == center
+      margin-top:    ( 0 - vertical/2 )
+      margin-bottom: ( 0 - vertical/2 )
+    if align == left
+      margin-top:    ( 0 - vertical)
+      margin-bottom: 0
+
+-blocks-gutter-block(horizontal, vertical, align)                      // <2>
+  vertical = size-vertical(vertical)
+  if horizontal > 0
+    if align == center
+      padding-left:  ( horizontal/2 )
+      padding-right: ( horizontal/2 )
+    if align == left
+      padding-left:  horizontal
+      padding-right: 0
+  if vertical > 0
+    if align == center
+      padding-top:    ( vertical/2 )
+      padding-bottom: ( vertical/2 )
+    if align == left
+      padding-top:    vertical
+      padding-bottom: 0
+-----------------------------------------------------------------------------
+
+<1> вспомогательный макрос для отступов контейнера блоков
+<2> вспомогательный макрос для внутренних отступов блока
+
+
+=== blocks-break()
+
+Выводит блок в новом ряду.
+
+Использование:
+
+-----------------------------------------------------------------------------
+.showcase-item.block:nth-child(3n+1)
+   blocks-break: true                                              // <1>
+-----------------------------------------------------------------------------
+
+<1> Выводим по 3 блока.
+
+Реализация:
+
+-----------------------------------------------------------------------------
+blocks-break(enabled = true)
+  if enabled
+    clear: left
+-----------------------------------------------------------------------------
+
+
+=== blocks-offset-left()
+
+Задает левый отступ для блока. Имеет смысл использовать, если необходимо
+пропустить колонку.
+
+Использование:
+
+-----------------------------------------------------------------------------
+.notes.block
+  blocks-offset-left: 30%
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+blocks-offset-left(offset)
+  margin-left: offset !important
+-----------------------------------------------------------------------------
+
+=== blocks-offset-right()
+
+Задает правый отступ для блока. Аналогичен `blocks-offset-left()`.
+
+Реализация:
+
+-----------------------------------------------------------------------------
+blocks-offset-right(offset)
+  margin-right: offset !important
+-----------------------------------------------------------------------------
+
+=== blocks-columns()
+
+Задает ширину колонок группы блоков исходя из количества одинаковых колонок.
+Дополнительно можно указать размер гооризонтального и вертикального отступов.
+
+Использование:
+
+-----------------------------------------------------------------------------
+.showcase.block-group                                                // <1>
+  blocks-columns: 4, 20px, 2                                         // <2>
+-----------------------------------------------------------------------------
+
+<1> применяется к группе блоков
+<2> 4 одинаковых колонки, горизонтальный отступ 20px, вертикальный 2 линии
+
+-----------------------------------------------------------------------------
+blocks-columns(cols, gutter-horizontal = 0, gutter-vertical = 0, align = center)
+  & > .block
+    width: (100%/cols)
+  & > .block:nth-child({cols}n+1)
+    clear:left
+    blocks-gutter(gutter-horizontal, gutter-vertical, align)
+-----------------------------------------------------------------------------
+
+== buttons
+
+Базовые определения для описания кнопок.
+
+Размер внутреннего отступа кнопок определяется переменной `buttons-padding`.
+
+Рекомендуется использовать относительные размеры, ориентируясь на
+используемые размеры шрифты и высоту строки.
+
+-----------------------------------------------------------------------------
+buttons-padding ?= 0.5em 1em
+-----------------------------------------------------------------------------
+
+=== use-buttons()
+
+Определяет минимальный класс `.button`, описывающий базовую геометрию и
+поведение кнопки. Класс не определяет какие-либо аспекты отображения кнопки.
+
+Использование макроса не является обязательным, в качестве альтернативы можно
+определить свой базовый класс кнопки, унаследовав его от базового класса
+`$buttons-button`.
+
+Использование:
+
+-----------------------------------------------------------------------------
+use-buttons()
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+use-buttons()
+  +media(any)
+    .button
+      @extend $buttons-button
+-----------------------------------------------------------------------------
+
+
+=== $buttons-behavior
+
+Определяет поведение кнопки. Реализация:
+
+-----------------------------------------------------------------------------
+$buttons-behavior
+  display: inline-block
+  *display: inline                                                      // <1>
+  zoom: 1
+  line-height: normal
+  white-space: nowrap
+  vertical-align: baseline
+  text-align: center
+  cursor: pointer
+  -webkit-user-drag: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  &::-moz-focus-inner
+    padding: 0                                                          // <2>
+    border: 0
+  &:focus
+    outline: 0
+-----------------------------------------------------------------------------
+
+<1> проблемы в IE7
+<2> обрамление сфокусированного элемента в FF
+
+
+=== $buttons-button
+
+Определяем абстрактный базовый класс кнопок. Для определения класса кнопки
+необходимо унаследовать его от этого базового класса:
+
+-----------------------------------------------------------------------------
+.button
+  @extend $buttons-button
+  background-color: gray
+  border-radius: 4px
+-----------------------------------------------------------------------------
+
+Исходя из дизайна, в производном классе может потребоваться определить
+следующие свойства:
+
+- `color` — цвета текста кнопки
+- `background` или `background-color` — фон кнопки
+- `border-radius` — радиус закругления кнопки
+- `border` — обрамление кнопки
+
+Реализация:
+
+-----------------------------------------------------------------------------
+$buttons-button
+  @extend $buttons-behavior
+  font-family: inherit
+  font-size: 100%
+  *font-size: 90%                                                       // <1>
+  *overflow: visible                                                    // <2>
+  padding: buttons-padding
+  text-decoration: none
+-----------------------------------------------------------------------------
+
+<1> избыточный размер кнопок в IE7
+<2> избыточный внутренний отступ для кнопок в IE7
+
+
+=== buttons-shadow()
+
+Использование:
+
+-----------------------------------------------------------------------------
+.button:active
+  buttons-shadow: active
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+buttons-shadow(type, shadow-size = 6px)
+  if type == active
+    return unquote('box-shadow: 0 0 0 1px rgba(0,0,0, 0.15) inset')
+  if type == default
+    return unquote('0 0 ' + shadow-size + ' rgba(0,0,0, 0.20) inset')
+-----------------------------------------------------------------------------
+
+== clearfix
+
+Определяет стандартное макро и абстрактный класс для clearfix
+(что кому больше нравится)
+
+=== clearfix()
+
+ The Magnificent Micro Clearfix:
+
+-----------------------------------------------------------------------------
+  .container
+    clearfix: true
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+clearfix(enabled = true)
+  if enabled
+    &:before
+    &:after
+      content: ""
+      display: table
+    &:after
+      clear: both
+    zoom: 1 if ie-supported
+-----------------------------------------------------------------------------
+
+
+=== $clearfix
+
+Абстрактный класс clearfix:
+
+-----------------------------------------------------------------------------
+$clearfix
+  clearfix: true
+-----------------------------------------------------------------------------
+
+== css3
+
+Прозрачно реализует работы со свойствами CSS3, автоматически генерируя
+варианты, специфичные для различных браузеров.
+
+Реализаци
+
+Для использовани достаточно просто указать желаемое значение свойства в
+каноническом виде.
+
+-----------------------------------------------------------------------------
+@require 'vendor'                                                     // <1>
+-----------------------------------------------------------------------------
+
+<1> `vendor()`
+
+=== appearance()
+
+Кроссбраузерный `appearance`:
+
+-----------------------------------------------------------------------------
+appearance()
+  vendor('appearance', arguments, only: webkit moz official)
+-----------------------------------------------------------------------------
+
+
+=== box-shadow()
+
+Кроссбраузерный `box-shadow`:
+
+-----------------------------------------------------------------------------
+box-shadow()
+  vendor('box-shadow', arguments, only: webkit official)
+-----------------------------------------------------------------------------
+
+
+=== border-radius()
+
+Кроссбраузерный `border-radius`:
+
+-----------------------------------------------------------------------------
+border-radius()
+  pos = ()
+  augmented = false
+  importance = arguments[length(arguments) - 1] == !important ? !important : unquote('')
+
+  for args in arguments
+    for arg in args
+      if arg is a 'ident'
+        append(pos, arg)
+        augmented = true
+      else
+        append(pos, arg)
+        if augmented
+          -border-radius-apply(pos, importance)
+          pos = ()
+  vendor('border-radius', pos, only: webkit official) unless augmented
+
+-border-radius-apply(pos, importance)
+  if length(pos) == 3
+    // border-radius: <top | buttom> <left | right> <n>
+    y = pos[0]
+    x = pos[1]
+    // We don't use moz for simple boder-radius anymore
+    // vendor('border-radius-%s%s' % pos, pos[2], only: moz)
+    vendor('border-%s-%s-radius' % pos, pos[2] importance, only: webkit official)
+  else if pos[0] in (top bottom)
+    // border-radius: <top | bottom> <n>
+    -border-radius-apply(pos[0] left pos[1], importance)
+    -border-radius-apply(pos[0] right pos[1], importance)
+  else if pos[0] in (left right)
+    // border-radius: <left | right> <n>
+    unshift(pos, top);
+    -border-radius-apply(pos, importance)
+    pos[0] = bottom
+    -border-radius-apply(pos, importance)
+-----------------------------------------------------------------------------
+
+
+=== background()
+
+Кроссбраузерный `background`, включая свойства `background-image`,
+`background-clip`, `background-origin`, `background-size`:
+
+-----------------------------------------------------------------------------
+background()
+  if match('-gradient\(', ''+arguments)
+    vendor('background', arguments, vendor-property: false)
+  else
+    background arguments
+
+background-image()
+  if match('-gradient\(', ''+arguments)
+    vendor('background-image', arguments, vendor-property: false)
+  else
+    background-image arguments
+
+background-clip()
+  if arguments[0] == text
+    vendor('background-clip', arguments, only: webkit)
+  else
+    -background-legacy-values('background-clip', arguments)
+    background-clip: arguments
+
+background-origin()
+  -background-legacy-values('background-origin', arguments)
+  background-origin: arguments
+
+background-size()
+  vendor('background-size', arguments, only: webkit moz official)
+
+-background-legacy-values(property, args)
+  legacy_args = ()
+  importance = unquote('')
+  for subargs in args
+    for arg in subargs
+      if arg in (border-box padding-box content-box)
+        arg = unquote('border')  if arg == border-box
+        arg = unquote('padding') if arg == padding-box
+        arg = unquote('content') if arg == content-box
+      if arg != '!important'
+        push(legacy_args,arg)
+      else
+        importance = !important
+  vendor(property, unquote(join(', ',legacy_args)) importance, only: moz webkit)
+-----------------------------------------------------------------------------
+
+
+=== border-image()
+
+Кроссбраузерный `border-image`:
+
+-----------------------------------------------------------------------------
+border-image()
+  vendor('border-image', arguments, only: webkit moz o official)
+-----------------------------------------------------------------------------
+
+
+=== column
+
+Кроссбраузерные свойства `column-count`, `column-gap`, `column-rule`,
+`column-rule-color`, `column-rule-width`, `column-rule-style`,
+`column-width`, `column-span`, `column-fill`.
+
+-----------------------------------------------------------------------------
+column-count()
+  vendor('column-count', arguments, only: webkit moz official)
+
+column-gap()
+  vendor('column-gap', arguments, only: webkit moz official)
+
+column-rule()
+  vendor('column-rule', arguments, only: webkit moz official)
+
+column-rule-color()
+  vendor('column-rule-color', arguments, only: webkit moz official)
+
+column-rule-width()
+  vendor('column-rule-width', arguments, only: webkit moz official)
+
+column-rule-style()
+  vendor('column-rule-style', arguments, only: webkit moz official)
+
+column-width()
+  vendor('column-width', arguments, only: webkit moz official)
+
+column-span()
+  vendor('column-span', arguments, only: webkit official)
+
+column-fill()
+  vendor('column-fill', arguments, only: moz)
+-----------------------------------------------------------------------------
+
+
+=== transform()
+
+Кроссбраузерный `transform`, включая свойства `transform-origin`,
+`transform-style`:
+
+-----------------------------------------------------------------------------
+transform()
+  vendor('transform', arguments)
+
+transform-origin()
+  vendor('transform-origin', arguments)
+
+transform-style()
+  vendor('transform-style', arguments)
+-----------------------------------------------------------------------------
+
+
+=== transition()
+
+Кроссбраузерный `transition`, свойства `transition-property`,
+`transition-duration`, `transition-timing-function`, `transition-delay`.
+
+-----------------------------------------------------------------------------
+transition()
+  vendor('transition', arguments)
+
+transition-property()
+  vendor('transition-property', arguments)
+
+transition-duration()
+  vendor('transition-duration', arguments)
+
+transition-timing-function()
+  vendor('transition-timing-function', arguments)
+
+transition-delay()
+  vendor('transition-delay', arguments)
+-----------------------------------------------------------------------------
+
+=== opacity()
+
+Поддержка прозрачности, в т.ч. для старых версий IE.
+
+-----------------------------------------------------------------------------
+opacity(n, args...)
+  opacity: n args
+  val = round(n * 100)
+  if val == 100
+    -ms-filter: none
+    filter: none
+  else
+    -ms-filter: '"progid:DXImageTransform.Microsoft.Alpha(Opacity=%s)"' % val args
+    filter: 'alpha(opacity=%s)' % val args
+-----------------------------------------------------------------------------
+
+
+=== box-sizing()
+
+Кроссбраузерный `box-sizing`:
+
+-----------------------------------------------------------------------------
+box-sizing()
+  vendor('box-sizing', arguments, only: webkit moz official)
+-----------------------------------------------------------------------------
+
+
+=== flexbox
+
+Кроссбраузерные свойства flexbox: `box-orient`, `box-flex-group`,
+`box-ordinal-group`, `box-align`, `box-pack`, `box-direction`.
+
+-----------------------------------------------------------------------------
+box-orient()
+  vendor('box-orient', arguments, only: webkit moz official)
+
+box-flex-group()
+  vendor('box-flex-group', arguments, only: webkit moz official)
+
+box-ordinal-group()
+  vendor('box-ordinal-group', arguments, only: webkit moz ms official)
+
+box-align()
+  vendor('box-align', arguments, only: webkit moz ms official)
+
+box-pack()
+  vendor('box-pack', arguments, only: webkit moz ms official)
+
+box-direction()
+  vendor('box-direction', arguments, only: webkit moz ms official)
+-----------------------------------------------------------------------------
+
+
+=== animation()
+
+Кроссбраузерный `animation`, в том числе:  `animation-name`,
+`animation-duration`, `animation-delay`, `animation-direction`,
+`animation-iteration-count`, `animation-timing-function`,
+`animation-play-state`, `animation-fill-mode`.
+
+-----------------------------------------------------------------------------
+animation()
+  vendor('animation', arguments)
+
+animation-name()
+  vendor('animation-name', arguments)
+
+animation-duration()
+  vendor('animation-duration', arguments)
+
+animation-delay()
+  vendor('animation-delay', arguments)
+
+animation-direction()
+  vendor('animation-direction', arguments)
+
+animation-iteration-count()
+  vendor('animation-iteration-count', arguments)
+
+animation-timing-function()
+  vendor('animation-timing-function', arguments)
+
+animation-play-state()
+  vendor('animation-play-state', arguments)
+
+animation-fill-mode()
+  vendor('animation-fill-mode', arguments)
+-----------------------------------------------------------------------------
+
+
+=== placeholder()
+
+
+Кроссбраузерный `placeholder`:
+
+-----------------------------------------------------------------------------
+placeholder()
+  for v in ':-webkit-input' '-moz' ':-moz' '-ms-input'
+    &:{v}-placeholder
+      for pair in arguments
+        if typeof(pair) == 'function'
+          pair()
+        else if pair is not null && pair[0] is not null
+          {pair[0]}: type(pair[1]) == 'string' ? s(pair[1]) : pair[1]
+-----------------------------------------------------------------------------
+
+=== hyphens()
+
+Кроссбраузерный `hyphens`:
+
+-----------------------------------------------------------------------------
+hyphens()
+  vendor('hyphens', arguments, only: webkit moz ms official)
+-----------------------------------------------------------------------------
+
+=== tab-size()
+
+Кроссбраузерный `tab-size`:
+
+-----------------------------------------------------------------------------
+tab-size()
+  vendor('tab-size', arguments, only: moz o official)
+-----------------------------------------------------------------------------
+
+
+=== overflow-scrolling()
+
+Кроссбраузерный `overflow-scrolling`:
+
+-----------------------------------------------------------------------------
+overflow-scrolling()
+  vendor('overflow-scrolling', arguments, only: webkit official)
+-----------------------------------------------------------------------------
+
+
+=== text-overflow()
+
+Кроссбраузерный `text-overflow`:
+
+-----------------------------------------------------------------------------
+text-overflow()
+  vendor('text-overflow', arguments, only: official o)
+-----------------------------------------------------------------------------
+
+
+ === text-size-adjust()
+
+Кроссплатформенный `text-size-adjust`:
+
+-----------------------------------------------------------------------------
+text-size-adjust()
+  vendor('text-size-adjust', arguments, only: official webkit ms)
+-----------------------------------------------------------------------------
+
+
+=== font-smoothing()
+
+Кроссплатформенный `font-smoothing`:
+
+-----------------------------------------------------------------------------
+font-smoothing()
+  vendor('font-smoothing', arguments, only: webkit)
+-----------------------------------------------------------------------------
+
+
+=== cursor()
+
+Кроссплатформенный `cursor`:
+
+-----------------------------------------------------------------------------
+cursor()
+  if match('-gradient\(', ''+arguments)
+    vendor('cursor', arguments, vendor-property: false)
+  else
+    cursor arguments
+-----------------------------------------------------------------------------
+
+
+=== user-select()
+
+Кроссплатформенный `user-select`:
+
+-----------------------------------------------------------------------------
+user-select()
+  vendor('user-select', arguments, only: webkit moz ms official)
+-----------------------------------------------------------------------------
+
+== display
+
+Переопределение свойства display.
+
+По умолчанию поддержка IE отключена:
+
+-----------------------------------------------------------------------------
+IE ?= false
+-----------------------------------------------------------------------------
+
+=== display
+
+Добавляет IE хак для `display: inline-block`, если необходима поддержка IE.
+
+-----------------------------------------------------------------------------
+display()
+  type = shift(arguments)
+  if type == inline-block && IE
+    display: inline-block arguments
+    *display: inline
+    zoom: 1
+  else
+    display: type arguments
+-----------------------------------------------------------------------------
+
+== fn
+
+Вспомогательные функциию и макросы.
+
+=== fn-has-important
+
+-----------------------------------------------------------------------------
+fn-has-important()
+  if last(arguments) == !important
+    return !important
+  else
+    return null
+-----------------------------------------------------------------------------
+== font
+
+Вспомогательные макросы для работы со шрифтами.
+
+=== use-font-face()
+
+Определяет загружаемый шрифт. Путь к загружаемым шрифтам задается значением
+переменной `font-path`.
+
+-----------------------------------------------------------------------------
+font-path ?= '/fnt'
+-----------------------------------------------------------------------------
+
+Модуль также определяет стандартный контейнер для определения шрифтовых
+стеков:
+
+-----------------------------------------------------------------------------
+fonts ?= {}
+-----------------------------------------------------------------------------
+
+Рекомендуется определять все шрифтовые стеки в виде элементов этого хеша в
+конфигурации приложения:
+
+-----------------------------------------------------------------------------
+
+fonts.serif = PT Serif, serif                                   // <1>
+
+.test
+  font-family: fonts.serif                                      // <2>
+
+-----------------------------------------------------------------------------
+
+<1> в конфигурации приложения
+<2> в стилях приложения
+
+=== use-font-face()
+
+Определяет загружаемый шрифт. Пример использования:
+
+-----------------------------------------------------------------------------
+use-font-face('Bitstream Vera Serif Bold', 'VeraSeBd.%s')              <1>
+-----------------------------------------------------------------------------
+
+Загружаемый шрифт определяется его именем `name` (соответствует свойству
+`font-family` и шаблоном имени файла `filename`. Если шаблон начинается со
+строки `http://` или с символа `/`, значение переменной `font-path` не
+используется. В противном случае значение этой переменой прибавляется к началу
+шаблона имени файла.
+
+Шаблон имени файла должен содержать последовательность `%s`, вместо которой
+подставляется расширение файла.
+
+При определении шрифта необходимо также указать значения параметров
+`font-style` и `font-weight`.
+
+-----------------------------------------------------------------------------
+use-font-face(font-family, font-file, font-style = normal, font-weight = 400)
+  filename = font-path + "/" + font-file unless match("^(http://|/)", font-file)
+  eot  = (filename % unquote("eot"))
+  woff = (filename % unquote("woff"))
+  ttf  = (filename % unquote("ttf"))
+  svg  = (filename % unquote("svg#webfont"))
+  @font-face
+    font-family: font-family
+    src: url(eot);
+    src: local("☺︎"),
+      url(eot?#iefix) format("embedded-opentype"),
+      url(woff) format("woff"),
+      url(ttf) format("truetype"),
+      url(svg) format("svg")
+    font-style:  font-style
+    font-weight: font-weight
+-----------------------------------------------------------------------------
+
+font-stack()
+  r = unquote('')
+  for n,i in arguments
+    if i == 0
+      r = n
+    else
+      r = r,n
+  return r
+== forms
+
+Стилизация форм — сложная задача, визуально формы могут сильно отличаться
+между собой в различных проектах.
+
+Модуль не навязывает какое-либо стилистическое оформление форм, вместо этого
+он предлагает рекомендуемую структуру верстки формы и выставляет разумные
+значения по умолчанию, определяющие базовые метрики элементов.
+
+Модуль вводит следующие понятия, представленные абстрактными классами:
+
+- `$forms-form` — контейнер для элементов формы. Одна форма может содержать
+  один (простейший случай) или несколько (отдельно для каждой части формы)
+  таких контейнеров.
+
+- `$forms-input` — поле ввода формы. К полям ввода относятся элементы 
+`<input>` с соответствующим типом, `<textarea>` и `<select>`. Все эти
+элементы характеризуются общими настройками обрамления и поведения при
+попадании элемента в фокус.
+
+- `$forms-control` — элемент управления формы, как правило, включающий
+в себя элементы `<input>`. Наиболее распространенный пример — элементы
+управления `<checkbox>` и `radiobutton>`.
+
+- `$forms-label` — метка поля. С точки зрения верстки может быть реализована
+как непосредственно элементом `<label>`, так и контейнером, содержащим этот
+элемент (например, если `<label>` может быть многострочным).
+
+Для определения блочной структуры формы имеет смысл также определить класс
+`form-field`, работающий как контейнер для элементов управления и полей ввода
+формы и являющий блоком в системе блоков модуля `blocks`.
+
+Пример верстки формы:
+
+-----------------------------------------------------------------------------
+<div class="signup-form>
+  <div class="form form--aligned block-group">
+    <div class="form-label block"><label for="name">Your name:</label></div>
+    <div class="form-field block"><input id="name" type="text" class="form-input"></div>
+  </div>
+  <div class="form form--aligned block-group">
+    <div class="form-label block"><label for="email">Your email:</label></div>
+    <div class="form-field block"><input id="email" type="email" class="form-input"></div>
+  </div>
+  <div class="form form--stacked block-group">
+    <div class="form-label block"><label for="about">About you:</label></div>
+    <div class="form-field block"><textarea id="about"></textarea></div>
+  </div>
+  <div class="form form--stacked block-group">
+    <div class="form-field block">
+      <label class="form-control"><input type="checkbox" name="agree"> Yes, I agree</label>
+    </div>
+  </div>
+</div>
+-----------------------------------------------------------------------------
+
+
+=== use-forms()
+
+Определяет минимальный набор базовых классов для работы с формами, наследуя
+от абстрактных классов.
+
+-----------------------------------------------------------------------------
+use-forms()
+  +media(any)
+    .form
+      @extend $forms-form
+
+    .form-input
+      @extend $forms-input
+
+    .form-control
+      @extend $forms-control
+
+    .form-label
+      @extend $forms-label
+-----------------------------------------------------------------------------
+
+
+=== $forms-form
+
+Контейнер элементов формы. Предназначен для совместной работы с модулем
+`blocks`.
+
+-----------------------------------------------------------------------------
+$forms-form
+  select[multiple]
+    height: auto
+-----------------------------------------------------------------------------
+
+
+=== $forms-object
+
+Базовый класс элемента управления формы.
+
+-----------------------------------------------------------------------------
+$forms-object
+  display: inline-block                                                 // <1>
+  box-sizing: border-box                                                // <2>
+-----------------------------------------------------------------------------
+
+<1> все элементы управления — `inline-block`
+<2> использование `box-sizing: border-box` упрощает стилизацию и устраняет
+несоответствия в размерах различных элементах между различными браузерами.
+
+
+=== $forms-control
+
+Элемент управления формы.
+
+-----------------------------------------------------------------------------
+$forms-control
+  @extend $forms-object
+  input
+    vertical-align: middle                                              // <1>
+  &[disabled]
+    -forms-disabled()
+-----------------------------------------------------------------------------
+
+<1> выравниваем по вертикали поля ввода внутри элемента управления.
+
+=== $forms-input
+
+Поле ввода формы.
+
+-----------------------------------------------------------------------------
+$forms-input
+  @extend $forms-object
+  &:focus
+    outline: 0;
+    outline: thin dotted \9; /* IE6-9 */
+  &[disabled]
+    -forms-disabled()
+-----------------------------------------------------------------------------
+
+
+=== $forms-label
+
+Метка поля формы.
+
+-----------------------------------------------------------------------------
+$forms-label
+  label
+    vertical-align: middle                                              // <1>
+    display: inline-block
+-----------------------------------------------------------------------------
+
+<1> если `<label>` внутри контейнера `form-label`, стараемся выровнять по
+вертикали независимо от количество строк в метке.
+
+
+=== -forms-disabled()
+
+Вспомогательный макрос, настраивающий параметры отключенных элементов формы.
+
+-----------------------------------------------------------------------------
+-forms-disabled()
+  cursor: not-allowed
+-----------------------------------------------------------------------------
+
+== height
+
+Переопределяет свойство `height`, добавляя поддержку в виде количества шагов.
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'fn'                                                         // <1>
+@require 'size'                                                       // <2>
+-----------------------------------------------------------------------------
+
+<1> `fn-has-important`
+<2> `size`, `-size-steps-or-units()`
+
+
+=== height
+
+Поддержка указания стандартного `height` в виде количества вертикальных
+шагов. В качестве дополнительного второго аргумента можно передать
+вычитаемую из результата поправку.
+
+-----------------------------------------------------------------------------
+height(v, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  height: -size-steps-or-units(sizes.vertical-step, v, a) important
+-----------------------------------------------------------------------------
+
+== icons
+
+Определяет стандартный способ использования иконных шрифтов.
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'font'                                                     // <1>
+-----------------------------------------------------------------------------
+
+<1> `use-font-face()`
+
+Элемент, отображающий шрифтовую иконку, должен содержать следующие атрибуты:
+
+- класс иконки для указания, что это элементы иконки (по умолчанию `icon`)
+- модификатор `icon--семейство-иконок` для привязки к конкретному иконному
+  шрифту, если используется несколько иконных шрифтов
+- `data-icon`, определяющий имя иконки.
+
+Например:
+
+-----------------------------------------------------------------------------
+<i class="icon icon--iconic" data-icon="save"></i>
+-----------------------------------------------------------------------------
+
+Имя класса иконок определяется переменной `icons-class`:
+
+-----------------------------------------------------------------------------
+icons-class ?= 'icon'
+-----------------------------------------------------------------------------
+
+Модуль определяет стандартный контейнер для хранения определений наборов
+икон, если это необходимо.
+
+-----------------------------------------------------------------------------
+icons ?= {}
+-----------------------------------------------------------------------------
+
+
+=== use-icons()
+
+Генерирует определение базового класса иконки.
+
+-----------------------------------------------------------------------------
+use-icons()
+  .{icons-class}[data-icon]
+    &:before
+      position: relative
+      top: 1px
+      display: inline-block
+      speak: none
+      line-height: 1
+      font-style: normal
+      vertical-align: baseline
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
+    &:empty:before
+      width 1em
+      text-align:center
+      box-sizing: content-box
+
+  for k,v in icons
+    use-icons-from(v)
+-----------------------------------------------------------------------------
+
+
+=== use-icons-from()
+
+Генерирует набор правил для отображения иконок определенного иконного шрифта.
+
+В случае, если хеш, определяющий набор иконок, содержит элемент `id`, его
+значение используется как модификатор стандартного класса иконки,
+определяемого переменной `icons-class`.
+
+-----------------------------------------------------------------------------
+use-icons-from(set, icons...)
+  class = 'icon'
+  class += ('--' + set.id) if set.id
+
+  if set.font-file
+    use-font-face(set.font-family, set.font-file)
+
+  .{class}
+    font-family: set.font-family
+  if icons
+    for g in icons
+      c = set.icons[g]
+      .{class}[data-icon={g}]:before
+        content: c
+  else
+    for g, c in set.icons
+      .{class}[data-icon={g}]:before
+        content: c
+-----------------------------------------------------------------------------
+
+=== icons-text-replace()
+
+Скрывает текст элемента иконки.
+
+-----------------------------------------------------------------------------
+icons-text-replace(enabled = true)
+  if enabled
+    font-size: 0
+    line-height: 0
+    &:before
+      width: 1em
+      text-align: center
+-----------------------------------------------------------------------------
+
+== linear-gradient
+
+Модуль реализует вспомогательные функции для реализации градиентов.
+
+Модуль использует набор вспомогательных функций `linear-gradient.js`:
+
+-----------------------------------------------------------------------------
+use('linear-gradient.js');
+-----------------------------------------------------------------------------
+
+=== linear-gradient()
+
+Создает линейный градиент с заданными стартовой позицией и произвольным
+набором точек смены цвета.
+
+Использование:
+
+-----------------------------------------------------------------------------
+background: linear-gradient(top, red, green, blue)
+background: linear-gradient(bottom, red, green 50%, blue)
+background: linear-gradient(bottom, red, 50% green, blue)
+background: linear-gradient(bottom, red, 50% green, 90% white, blue)
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+linear-gradient(start, stops...)
+  error('color stops required') unless length(stops)
+
+  unquote('linear-gradient(' + join(', ',arguments) + ')')
+-----------------------------------------------------------------------------
+
+
+=== linear-gradient-image()
+
+Генерирует изображение для указанного линейного градиента в виде Data URI.
+Это позволяет определять непосредственно в CSS простые градиенты для
+браузеров, не поддерживающих градиенты CSS3.
+
+Пример использования:
+
+-----------------------------------------------------------------------------
+
+.nav {
+   background: linear-gradient-image(80px, white, black);
+   background: linear-gradient(top, white, black);
+}
+
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+linear-gradient-image(start, stops...)
+  error('node-canvas is required for linear-gradient-image()') unless has-canvas
+  stops = stops[0] if length(stops) == 1
+  error('gradient image size required') unless start[0] is a 'unit'
+  size = start[0]
+  start = start[1] or 'top'
+  grad = -linear-gradient-create-image(size, start)
+  stops = -linear-gradient-normalize-stops(stops)
+  -linear-gradient-add-stop(grad, stop[0], stop[1]) for stop in stops
+  'url(%s)' % -linear-gradient-data-uri(grad)
+-----------------------------------------------------------------------------
+
+
+=== -linear-gradient-post-in-stops()
+
+Вспомогательный макрос.
+
+-----------------------------------------------------------------------------
+-linear-gradient-pos-in-stops(i, stops)
+  len = length(stops)
+  if len - 1 == i
+    100%
+  else if i
+    unit(i / len * 100, '%')
+  else
+    0
+-----------------------------------------------------------------------------
+
+
+=== -linear-gradient-normalize-stops()
+
+Вспомогательный макрос, нормализация color stops:
+
+- (color pos) -> (pos color)
+- (color) -> (implied-pos color)
+
+-----------------------------------------------------------------------------
+-linear-gradient-normalize-stops(stops)
+  stops = clone(stops)
+  for stop, i in stops
+    if length(stop) == 1
+      color = stop[0]
+      stop[0] = -linear-gradient-pos-in-stops(i, stops)
+      stop[1] = color
+    else if typeof(stop[1]) == 'unit'
+      pos = stop[1]
+      stop[1] = stop[0]
+      stop[0] = pos
+  stops
+-----------------------------------------------------------------------------
+
+== margin
+
+Переопределяет свойства `margin`, добавляя поддержку размеров с
+использованием вертикального и горизонтального шагов.
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'fn'                                                         // <1>
+@require 'size'                                                       // <2>
+-----------------------------------------------------------------------------
+
+<1> `fn-has-important()`
+<2> `size`, `-size-steps-or-units()`, `-size-offsets()`
+
+
+=== margin-top
+
+Переопределяет `margin-top`, допуская использование количества вертикальных
+шагов `m` и поправки `a`.
+
+-----------------------------------------------------------------------------
+margin-top(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-top: -size-steps-or-units(sizes.vertical-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== margin-bottom
+
+Переопределяет `margin-bottom`, допуская использование количества
+вертикальных шагов `m` и поправки `a`.
+
+-----------------------------------------------------------------------------
+margin-bottom(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-bottom: -size-steps-or-units(sizes.vertical-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== margin-left
+
+Переопределяет `margin-left`, допуская использование количества
+горизонтальных шагов `m` и поправки `a`.
+
+-----------------------------------------------------------------------------
+margin-left(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-left: -size-steps-or-units(sizes.horizontal-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== margin-right
+
+Переопределяет `margin-right`, допуская использование количества
+горизонтальных шагов `m` и поправки `a`.
+
+-----------------------------------------------------------------------------
+margin-right(m, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  margin-right: -size-steps-or-units(sizes.horizontal-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== margin
+
+Переопределяет `margin`, допуская использование количества горизонтальных
+и вертикальных шагов в случае, если не указана единица измерения.
+
+-----------------------------------------------------------------------------
+margin()
+  margin: -size-offsets(arguments)
+-----------------------------------------------------------------------------
+
+== media
+
+Модуль позволяет определять код для различных медиа-вариантов. Он может быть
+использован для решения следующих задач:
+
+- определения кода медиа-вариантов;
+- генерация кода, относящегося к  медиа-варианту;
+- генерация кода для одного или нескольких legacy-браузеров.
+
+Модуль может работать в двух режимах:
+
+- режим непосредственной генерации сразу выводит генерируемый код
+- режим вывода медиа-варианта, выводит только код, соответствующий
+  запросу, указываемому переменной media-query.
+
+В первом случае генерируемый код содержит большое количество одинаковых
+инструкций `@media`, увеличивающих размер итогового CSS.
+
+Во втором случае код вообще не содержит инструкций `@media` и предназначен
+для включения в соответствующую инструкцию.
+
+=== media-query
+
+Переменная `media-query` определяет медиа-запрос, используемый для генерации
+кода во втором варианте. Она может принимать следующие значения:
+
+- строка медиа-запроса — генерируется код, соответствующий запросу;
+- `false` — режим вывода медиа-варианта отключен;
+- `none`  - генерируется код, соответствующий.
+  определяемому переменной `media-legacy`.
+
+По умолчанию переменная имеет значение `false`:
+
+-----------------------------------------------------------------------------
+media-query = false
+-----------------------------------------------------------------------------
+
+=== media()
+
+В качестве аргумента получает строку media-query. Рекомендуется определять
+такие строки в виде переменных и передавать при вызове макроса переменную.
+Передаваемый в макрос блок кода определяет содержимое медиа-варианта.
+
+-----------------------------------------------------------------------------
+media(query = any, legacy = false)
+  if media-query != false                                             // <1>
+    {block} if media-query == query or media-query == legacy
+  else
+    if query == any                                                   // <2>
+      {block}
+    else
+      @media query
+        {block}
+-----------------------------------------------------------------------------
+
+<1> если указан медиа-вариант для вывода, выводим только его
+<2> если указан вариант по умолчанию, просто выводим соответствующий код
+
+== mq
+
+Определяет функции, упрощающие генерация условий media query. Помимо этого,
+определяет стандартный контейнер для декларирования media query, используемых
+приложением.
+
+-----------------------------------------------------------------------------
+mq ?= {}
+-----------------------------------------------------------------------------
+
+Рекомендуется определяеть все медиа-запросы, используемые в приложении, путем
+создания элементов в хеше `mq` и в дальнейшем ссылаться на эти элементы. Это
+позволяет уменьшить количество переменных в глобальном пространстве имен и
+дает возможность итерирования по используемым медиа-запросам.
+
+Например:
+
+-----------------------------------------------------------------------------
+
+mq.desktop = mq-wider(1024px)                                    // <1>
+
++media(mq.desktop)                                               // <2>
+  .menu
+    position: absolute
+-----------------------------------------------------------------------------
+
+<1> в конфигурации  приложения
+<2> в таблице стилей
+
+=== mq-wider()
+
+Определяет медиа-запрос для screen, соответствующий ширине больше указанной.
+Если единицы измерения не указаны, используются пикселы.
+
+-----------------------------------------------------------------------------
+mq-wider(l)
+  return -mq-query('screen', 'min-width', l)
+-----------------------------------------------------------------------------
+
+=== mq-narrower()
+
+Определяет медиа-запрос для screen, соответствующий ширине меньше указанной.
+Если единицы измерения не указаны, используются пикселы.
+
+-----------------------------------------------------------------------------
+mq-narrower(l)
+  return -mq-query('screen', 'max-width', l)
+-----------------------------------------------------------------------------
+
+=== mq-longer()
+
+Определяет медиа-запрос для screen, соответствующий высоте больше указанной.
+Если единицы измерения не указаны, используются пикселы.
+
+-----------------------------------------------------------------------------
+mq-longer(l)
+  return -mq-query('screen', 'min-height', l)
+-----------------------------------------------------------------------------
+
+=== mq-shorter()
+
+Определяет медиа-запрос для screen, соответствующий высоте меньше указанной.
+Если единицы измерения не указаны, используются пикселы.
+
+-----------------------------------------------------------------------------
+mq-shorter(l)
+  return -mq-query('screen', 'max-height', l)
+-----------------------------------------------------------------------------
+
+=== -mq-query()
+
+Вспомогательная функция, генерирует условие media-query.
+
+-----------------------------------------------------------------------------
+-mq-query(m, p, l)
+  l = '' + l + 'px' if '' == unit(l)
+  return m + 'and (' + p + ' : ' + s + ')'
+-----------------------------------------------------------------------------
+
+== normalize
+
+Нормализация элементов страницы для различных браузеров.
+
+Зависимости модуля:
+
+-----------------------------------------------------------------------------
+@require 'reset'                                                        // <1>
+-----------------------------------------------------------------------------
+
+<1> `reset`
+
+=== use-normalize()
+
+Выполняет полную нормализацию.
+
+-----------------------------------------------------------------------------
+use-normalize()
+  +media(any)
+    normalize-document()
+    normalize-html5()
+    normalize-links()
+    normalize-content()
+    normalize-forms()
+-----------------------------------------------------------------------------
+
+
+=== normalize-document()
+
+Выполняет нормализацию настроек документа:
+
+-----------------------------------------------------------------------------
+normalize-document()
+  html
+    font-size: 100%                                                     // <1>
+    -ms-text-size-adjust: 100%                                          // <2>
+    -webkit-text-size-adjust: 100%
+  body
+    margin: 0                                                           // <3>
+-----------------------------------------------------------------------------
+
+<1> проблемы в IE7 если `font-size` для `body` в `em`
+<2> блокируем подстройку размера текста в iOS после изменения ориентации
+    устройства без отключения пользовательского масштабирования
+<3> отступы для документа в IE7
+
+
+=== normalize-html5()
+
+Выполняет нормализацию элементов HTML5.
+
+-----------------------------------------------------------------------------
+normalize-html5()
+  article                                                               // <1>
+  aside
+  figcaption
+  figure
+  footer
+  header
+  hgroup
+  nav
+  section
+  details
+  summary
+  main
+    display: block
+
+  audio
+  canvas
+  progress
+  video
+    display:        inline-block                                        // <2>
+    vertical-align: baseline                                            // <3>
+
+  audio:not([controls])
+    display: none                                                       // <4>
+    height:  0                                                          // <5>
+
+  [hidden]
+  template
+    display: none !important                                            // <6>
+-----------------------------------------------------------------------------
+
+<1> все элементы в IE8-9, `<details>` и `<summary>` в IE10-11/FF,
+    `<main>` в IE11
+<2> `inline-block` не определен в IE8-9
+<3> проблемы с выравниванием в GC/FF/O
+<4> не показываем `<audio>` без элементов управления
+<5> корректировка высоты в IOS5
+<6> `hidden` в IE8-10, `<template` в IE8-11/SF/FF<22
+
+
+=== normalize-links()
+
+Выполняет нормализацию отображения ссылок.
+
+-----------------------------------------------------------------------------
+normalize-links()
+  a
+    background: transparent                                             // <1>
+  a:active
+  a:hover
+    outline: 0                                                          // <2>
+-----------------------------------------------------------------------------
+
+<1> серый фон для активных ссылок в IE10
+<2> читаемость ссылок в фокусе для всех браузеров
+
+=== normalize-content
+
+Выполняет нормализацию отображения контентных элементов:
+
+------------------------------------------------------------------------------
+normalize-content()
+  abbr[title]
+    border-bottom: 1px dotted                                           // <1>
+
+  b
+  strong
+    font-weight: bold                                                   // <2>
+
+  dfn
+    font-style: italic                                                  // <3>
+
+  mark
+    background: #ff0                                                    // <4>
+    color: #000
+
+  small
+    font-size: 80%                                                      // <5>
+
+  sub
+  sup
+    font-size: 75%                                                      // <6>
+    line-height: 0
+    position: relative
+    vertical-align: baseline
+  sup
+    top: -0.5em
+  sub
+    bottom: -0.25em
+
+  img
+    border: 0                                                           // <7>
+
+  svg:not(:root)
+    overflow: hidden                                                    // <8>
+
+  hr
+    -moz-box-sizing: content-box                                        // <9>
+    box-sizing: content-box
+    height: 0
+
+  pre
+    overflow: auto
+
+  code
+  kbd
+  pre
+  samp
+    font-size: 1em                                                      // <10>
+
+  table
+    border-collapse: collapse                                           // <11>
+    border-spacing: 0
+  td
+  th
+    padding: 0
+
+  nav > ul
+    list-style: none
+------------------------------------------------------------------------------
+
+<1>  стилизация `<abbr>` отсутствует в IE8-11/SF/GC
+<2>  `bolder` в FF4+/SF/GC
+<3>  не стилизуется в SF/GC
+<4>  не поддерживаетсяв IE8-9
+<5>  единый размер `<small>` для всех браузеров
+<6>  `<sub>` и `<sup>` не должны влиять на `line-height`
+<7>  изображения в ссылках в IE8-10
+<8>  корректировка `overflow` в IE10-11
+<9>  `<hr>` отображается по разному FF и всеми остальными
+<10> устанавливаем единый размер шрифта для всех браузеров
+<11> удаляем отступы для таблиц
+
+
+=== normalize-forms
+
+Выполняет нормализацию форм.
+
+------------------------------------------------------------------------------
+normalize-forms()
+  button
+  input
+  optgroup
+  select
+  textarea
+    color: inherit                                                      // <1>
+    font: inherit                                                       // <2>
+    margin: 0                                                           // <3>
+
+  button
+    overflow: visible                                                   // <4>
+
+  button
+  select
+    text-transform: none                                                // <5>
+
+  button
+  html input[type="button"]
+  input[type="reset"]
+  input[type="submit"]
+    -webkit-appearance: button                                          // <6>
+    cursor: pointer                                                     // <7>
+
+  button[disabled]
+  html input[disabled]
+    cursor: default                                                     // <8>
+
+  button::-moz-focus-inner
+  input::-moz-focus-inner
+    border: 0                                                           // <9>
+    padding: 0
+
+  input
+    line-height: normal                                                 // <10>
+
+  input[type="checkbox"]
+  input[type="radio"]
+    box-sizing: border-box                                              // <11>
+    padding: 0                                                          // <12>
+
+  input[type="number"]::-webkit-inner-spin-button                       // <13>
+  input[type="number"]::-webkit-outer-spin-button
+    height: auto
+
+  input[type="search"]
+    -webkit-appearance: textfield                                       // <14>
+    -moz-box-sizing: content-box
+    -webkit-box-sizing: content-box                                     // <15>
+    box-sizing: content-box
+  input[type="search"]::-webkit-search-cancel-button
+  input[type="search"]::-webkit-search-decoration
+    -webkit-appearance: none                                            // <16>
+
+  legend
+    border: 0                                                           // <17>
+    padding: 0                                                          // <18>
+
+  textarea
+    overflow: auto                                                      // <19>
+
+  optgroup
+    font-weight: bold                                                   // <20>
+-----------------------------------------------------------------------------
+
+<1> не неследуется цвет, влияет на цвет неактивных элементов
+<2> корректные свойства шрифта не наследуются
+<3> отступы устанавливаются по-разному в FF4/SF/GC
+<4> в IE8-11 выставляется `overflow: hidden`
+<5> наследование: `<button>` в FF/IE8-11/O, `<select>` в FF
+<6> ошибка WebKit в Android 4.0.*, медийные элементы управления,
+    невозможность стилизовать кликабельные <input> в iOS
+<7> единообразие типа курсора между кнопками с изображениями и остальными
+<8> курсор для отключенных элементов
+<9> внутренний отступ и обрамление для элементов в фокусе в FF
+<10> несовместимость в FF4+
+<11> `content-box` в IE8-10
+<12> избыточный отступ в IE8-10
+<13> высота в GC
+<14> `appearance: searchfield` в SF/GC
+<15> `box-sizing: border-box` в SF/GC
+<16> внутренний отступ и кнопка отмена поиска в SF/GC в OS X
+<17> в IE8-11 не наследуется `color`
+<18> удаляем внутренний отступ по умолчанию
+<19> вертикальный скроллбар в IE8-11
+<20> везде выделяет `<optgroup>`
+
+== overflow
+
+Переопределяет свойство `overflow` для поддержки сокращенного текста 
+
+К стандартным значениям свойства добавляется значение `ellipsis`, приводящее
+к выводу сокращенного текста.
+
+
+=== overflow()
+
+Переопределяет свойство CSS `overlow`.
+
+-----------------------------------------------------------------------------
+overflow()
+  if arguments[0] == ellipsis
+    overflow: hidden
+    text-overflow: ellipsis
+  else
+    overflow: arguments
+-----------------------------------------------------------------------------
+
+== padding
+
+Переопределяет свойства `padding`, добавляя поддержку размеров с
+использованием вертикального и горизонтального шагов.
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'fn'                                                         // <1>
+@require 'size'                                                       // <2>
+-----------------------------------------------------------------------------
+
+<1> `fn-has-important()`
+<2> `size`, `-size-steps-or-units()`, `-size-offsets()`
+
+
+=== padding-top
+
+Переопределяет `padding-top`, допуская использование количества вертикальных
+шагов `p` и поправки `a`.
+
+-----------------------------------------------------------------------------
+padding-top()
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-top: -size-steps-or-units(sizes.vertical-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== padding-bottom
+
+Переопределяет `padding-bottom`, допуская использование количества
+вертикальных шагов `p` и поправки `a`.
+
+-----------------------------------------------------------------------------
+padding-bottom()
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-bottom: -size-steps-or-units(sizes.vertical-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== padding-left
+
+Переопределяет `padding-left`, допуская использование количества
+вертикальных шагов `p` и поправки `a`.
+
+-----------------------------------------------------------------------------
+padding-left(p, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-left: -size-steps-or-units(sizes.horizontal-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== padding-right
+
+Переопределяет `padding-right`, допуская использование количества
+вертикальных шагов `p` и поправки `a`.
+
+-----------------------------------------------------------------------------
+padding-right(p, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  padding-right: -size-steps-or-units(sizes.horizontal-step, v, a) important
+-----------------------------------------------------------------------------
+
+
+=== padding
+
+Переопределяет `padding`, допуская использование количества горизонтальных
+и вертикальных шагов в случае, если не указана единица измерения.
+
+-----------------------------------------------------------------------------
+padding()
+  padding: -size-offsets(arguments)
+-----------------------------------------------------------------------------
+
+== position
+
+Определяет набор макросов для позиционирования элементов.
+
+
+=== fixed
+
+Задает фиксированное позиционирование.
+
+-----------------------------------------------------------------------------
+fixed()
+  -position-is('fixed', arguments)
+-----------------------------------------------------------------------------
+
+
+=== absolute
+
+Задает абсолютное позиционирование.
+
+-----------------------------------------------------------------------------
+absolute()
+  -position-is('absolute', arguments)
+-----------------------------------------------------------------------------
+
+
+=== relative
+
+Задает относительное позиционирование.
+
+-----------------------------------------------------------------------------
+relative()
+  -position-is('relative', arguments)
+-----------------------------------------------------------------------------
+
+
+=== centered
+
+Центрирует элемент по горизонтали.
+
+-----------------------------------------------------------------------------
+centered(enabled = true)
+  if enabled
+    margin-left: auto
+    margin-right: auto
+-----------------------------------------------------------------------------
+
+
+=== -position-is()
+
+Вспомогательный макрос, выполняет позиционирование элемента.
+
+-----------------------------------------------------------------------------
+-position-is(type, args)
+  i = 0
+  position: unquote(type)
+  for j in (1..4)
+    if length(args) > i
+      {args[i]}: args[i + 1] is a 'unit' ? args[i += 1] : 0
+    i += 1
+-----------------------------------------------------------------------------
+
+== reset
+
+Сброс стилей элементов.
+
+=== use-reset()
+
+Выполняет сброс всех контентных элементов.
+
+-----------------------------------------------------------------------------
+use-reset()
+  article, aside, figcaption, figure, footer, header, hgroup, nav, section,
+  details, summary, main, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+  pre, a, abbr, address, code, del, dfn, em, img, dl, dt, dd, ol, ul,
+  li, fieldset, form, label, legend, caption, tbody, tfoot, thead, tr
+    reset: box-model
+  nav
+    ol, ul
+      reset: list
+  h1,h2,h3,h4,h5,h6
+    font-size: 100%
+    font-weight: normal
+-----------------------------------------------------------------------------
+
+=== reset()
+
+В зависимости от передаваемых параметров выполняет сброс отступов, списочного
+стиля или шрифтовы настроек.
+
+Пример использования:
+
+ul, li
+  reset: box-model list-style
+
+-----------------------------------------------------------------------------
+reset()
+  for a in arguments
+    if a == box-model
+      -reset-box-model()
+    if a == list
+      -reset-list()
+    if a == font
+      -reset-font()
+-----------------------------------------------------------------------------
+
+
+=== -reset-box-model()
+
+Вспомогательный макрос, сбрасывает все отступы и обрамление в 0.
+
+-----------------------------------------------------------------------------
+-reset-box-model()
+  margin: 0
+  padding: 0
+  border: 0
+  outline: 0
+-----------------------------------------------------------------------------
+
+
+=== -reset-list()
+
+Вспомогательный макрос, сбрасывает стили списка.
+
+-----------------------------------------------------------------------------
+-reset-list()
+  list-style: none
+-----------------------------------------------------------------------------
+
+
+=== -reset-font()
+
+Вспомогательный макрос, сбрасывает шрифтовые стили.
+
+-----------------------------------------------------------------------------
+-reset-font()
+  font-weight: inherit
+  font-style: inherit
+  font-family: inherit
+  font-size: 100%
+  vertical-align: baseline
+-----------------------------------------------------------------------------
+
+== size
+
+Модуль позволяет использовать фиксированный шаг для задания вертикальных и
+горизонтальных размеров и отступов. Использование стандартного вертикального
+шага, в частности, способствует выдерживанию 
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'fn'                                                         // <1>
+-----------------------------------------------------------------------------
+
+<1> `fn-has-important()`
+
+Модуль определяет стандартный контейнер `sizes`, предназначенный для
+определения размерных констант. Модель определяет две стандартные константы:
+
+-----------------------------------------------------------------------------
+sizes = {
+  vertical-step: 8px,                                                   // <1>
+  horizontal-step: 10px                                                 // <2>
+}
+-----------------------------------------------------------------------------
+
+<1> вертикальный базовый шаг
+<2> горизонтальный базовый шаг
+
+
+
+=== size-vertical()
+
+Вычисляет вертикальный размер по переданному количеству шагов `n` и поправке
+`a`. Если в качестве количества шагов передано значение с единицей измерения,
+просто возвращает это значение.
+
+-----------------------------------------------------------------------------
+size-vertical(n, a = 0)
+  return -size-steps-or-units(sizes.vertical-step, n, a)
+-----------------------------------------------------------------------------
+
+
+=== size-horizontal()
+
+Вычисляет горизонтальный размер по переданному количеству шагов `n` и поправке
+`a`. Если в качестве количества шагов передано значение с единицей измерения,
+просто возвращает это значение.
+
+-----------------------------------------------------------------------------
+size-horizontal(n, a = 0)
+  return -size-steps-or-units(sizes.vertical-step, n, a)
+-----------------------------------------------------------------------------
+
+=== -size-steps-or-units()
+
+Вычисляет смещение на основании величины шага `s`, количества шагов `n` и 
+поправки `a`. В отличие от функции `-step-size()` допускает передачу в
+качестве аргумента `n` явного размера в какой-либо единице измерения. В этом
+случае расчет не производится и функции просто возвращает это значение.
+
+-----------------------------------------------------------------------------
+-size-steps-or-units(s, n, a = 0)
+  if n == auto || n == 0
+    return n
+  else
+    if '' == unit(n)
+      if a != 0
+        return s*n - a
+      else
+        return s*n
+    else
+      return n
+-----------------------------------------------------------------------------
+
+=== -size-offsets()
+
+Заменяет количество шагов в наборе отступов на соответствующие вертикальные
+или горизонтальные размеры.
+
+Функция не допускает указания поправок для сохранения совместимости со
+стандартным CSS.
+
+-----------------------------------------------------------------------------
+-size-offsets()
+  r = unquote('')
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+
+  for n, i in arguments
+    if n == !important
+      push r n
+    else
+      if i == 0 or i == 2
+        push(r, -size-steps-or-units(sizes.vertical-step, n))
+      else
+        push(r, -size-steps-or-units(sizes.horizontal-step, n))
+
+  return r important
+-----------------------------------------------------------------------------
+== text
+
+Реализует настройку геометрии текстовых элементов с помощью так называемых
+текстовых стилей — предопределенных наборов свойств текста.
+
+Текстовый стиль представляет собой хэш-переменную, содержащую следующие
+элементы:
+
+- `font-family`  — семейство шрифтов
+- `font-size`    — размер шрифта
+- `line-height`  — высота строки шрифта
+- `font-style`   — стиль шрифта (опционально)
+- `font-variant` — вариант шрифта (опционально)
+
+Настройка типографики элементов с помощью набора предопределенных стилей,
+высота строки в которых кратна выбранному вертикальному шагу, обеспечивает
+простой и удобный способ поддержки общего вертикального ритма страницы.
+
+Модуль определяет стандартный контейнер для текстовых стилей, `text`.
+
+-----------------------------------------------------------------------------
+text ?= {}
+-----------------------------------------------------------------------------
+
+Пример определения стиля:
+
+-----------------------------------------------------------------------------
+text.sans-normal = {
+  font-family: sans-serif,
+  font-size:   16px,
+  line-height: 24px
+}
+-----------------------------------------------------------------------------
+
+=== text-style()
+
+Применяет настройки текстового стиля к элементу.
+
+В качестве параметра `style` должна быть передана хэш-переменная,
+соответствующая описанию стиля. Дополнительно можно передать необязательный
+параметр `adjust`, позволяющий скорректировать высоту строки стиля.
+
+Пример использования:
+
+-----------------------------------------------------------------------------
+.content h2
+  text-style: text.sans-large
+.button
+  text-style: text.sans-normal 1
+-----------------------------------------------------------------------------
+
+Реализация:
+
+-----------------------------------------------------------------------------
+text-style(style, adjust = 0)
+  text-metrics: style adjust
+  font-family:  style.font-family  if style.font-family
+  font-style:   style.font-style   if style.font-style
+  font-weight:  style.font-weight  if style.font-weight
+  font-variant: style.font-variant if style.font-variant
+  text-transform: style.text-transform if style.text-transform
+-----------------------------------------------------------------------------
+
+
+=== text-style-metrics()
+
+Макро аналогично `text-style()`, но применяет только настройки, связанные с
+метрикой текста: `font-size` и `line-height`. Таким образом, можно избежать
+излишнего указания семейства шрифтов, наследуя его от родительского элемента.
+
+-----------------------------------------------------------------------------
+text-metrics(style, adjust = 0)
+  font-size:   style.font-size    if style.font-size
+  line-height: style.line-height + size-vertical(adjust) if style.line-height
+-----------------------------------------------------------------------------
+
+
+=== text-hidden()
+
+Скрывает текстовое содержимое элемента.
+
+-----------------------------------------------------------------------------
+text-hidden(enabled = true)
+  if enabled
+    text-indent: 101%
+    white-space: nowrap
+    overflow: hidden
+-----------------------------------------------------------------------------
+
+== vendor
+
+Модуль обеспечивает работу с префиксами вендоров.
+Реализация: nib (http://visionmedia.github.io/nib/).
+
+Использует набор вспомогательных фукнций `vendor.js`:
+
+-----------------------------------------------------------------------------
+use('vendor.js');
+-----------------------------------------------------------------------------
+
+Набор поддерживаемых префиксов:
+
+-----------------------------------------------------------------------------
+vendor-prefixes ?= webkit moz o ms official
+-----------------------------------------------------------------------------
+
+=== vendor
+
+Поддержка префиксов для указанного свойства или набора аргументов с
+возможным указанием применяемых или исключаемых префиксов.
+
+-----------------------------------------------------------------------------
+vendor(prop, args, only = null, ignore = null, vendor-property = true)
+  need_normalize = !vendor-property or prop in ('transition' 'transition-property' 'border-image' 'border-image-slice')
+  for prefix in vendor-prefixes
+    unless (only and !(prefix in only)) or (ignore and prefix in ignore)
+      if official == prefix
+        if need_normalize
+          {prop}: normalize(prop,('%s' % args))
+        else
+          {prop}: args
+      else
+        newprop = prop
+        newprop = '-' + prefix + '-' + prop if vendor-property
+
+        if need_normalize
+          {newprop}: normalize(prop,('%s' % args),prefix)
+        else
+          {newprop}: args
+-----------------------------------------------------------------------------
+
+=== vendor-value
+
+Применяет префикс к значению.
+
+-----------------------------------------------------------------------------
+vendor-value(arg, only = null, ignore = null)
+  prop = current-property[0]
+  for prefix in vendor-prefixes
+    unless (only and !(prefix in only)) or (ignore and prefix in ignore) or official == prefix
+      add-property(prop, '-%s-%s' % (prefix arg))
+  arg
+-----------------------------------------------------------------------------
+== width
+
+Переопределяет свойство `width`, добавляя поддержку в виде количества шагов.
+
+Зависимости:
+
+-----------------------------------------------------------------------------
+@require 'fn'                                                         // <1>
+@require 'size'                                                       // <2>
+-----------------------------------------------------------------------------
+
+<1> `fn-has-important`
+<2> `size`, `-size-steps-or-units()`
+
+
+=== width
+
+Поддержка указания стандартного `width` в виде количества горизонтальных
+шагов. В качестве дополнительного второго аргумента можно передать
+вычитаемую из результата поправку.
+
+-----------------------------------------------------------------------------
+width(v, a = 0)
+  if important = fn-has-important(arguments)
+    _ = pop(arguments)
+  v = shift(arguments)
+  a = shift(arguments) || 0
+
+  width: -size-steps-or-units(sizes.horizontal-step, v, a) important
+-----------------------------------------------------------------------------
+

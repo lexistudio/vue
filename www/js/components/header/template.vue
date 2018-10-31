@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  var nav = require("./app-nav.vue");
+  var nav = require("../menu/template.vue");
 
   module.exports = {
     components: {
