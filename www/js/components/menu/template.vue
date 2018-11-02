@@ -34,10 +34,11 @@
     margin-left: 0;
   }
   .menu__a {
+    font-size: 18px;
     color: #fff;
     text-decoration: none;
   }
   .menu__a.router-link-exact-active {
-    color: #F54352;
+    color: #41B883;
   }
 </style>

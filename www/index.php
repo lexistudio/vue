@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <title>tenzer</title>
+  <meta charset="UTF-8">
   <meta name="description" content="tenzer">
-  <meta name="keywords" content="tenzer">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>

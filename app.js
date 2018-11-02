@@ -1,15 +1,15 @@
 //plugin
-var Vue =         require("vue/dist/vue.js");
+var Vue         = require("vue/dist/vue.js");
 var VueResource = require("vue-resource");
-var VueRouter =   require("vue-router");
+var VueRouter   = require("vue-router");
 
 //register plugin
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
 //component
-var main =     require("./www/js/components/layout/main.vue");
-var blog =     require("./www/js/components/layout/blog.vue");
+var main     = require("./www/js/components/layout/main.vue");
+var blog     = require("./www/js/components/layout/blog.vue");
 var notFound = require("./www/js/components/error/template.vue");
 
 //config console log

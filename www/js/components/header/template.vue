@@ -18,6 +18,7 @@
 
 <style>
   .head {
-    background: #212529;
+    background: #35495E;
+    height: 300px;
   }
 </style>
