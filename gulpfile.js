@@ -10,6 +10,8 @@ const glob         = require('glob');
 const path         = require('path');
 const browserify   = require('browserify')
 const vueify       = require('vueify')
+const buffer       = require('vinyl-buffer')
+const minify       = require('gulp-minify');
 const source       = require('vinyl-source-stream')
 
 const css = entry => {
@@ -18,10 +20,10 @@ const css = entry => {
       .pipe(plumber())
       .pipe(stylus({ errLogToConsole: true }))
       .pipe(gcmq())
-      .pipe(gulp.dest('./www/css'))
+      .pipe(gulp.dest('./www/assets/css'))
       .pipe(gcmq())
       .pipe(cleanCSS({ compatibility: 'ie8' }))
-      .pipe(gulp.dest('./www/css/min'))
+      .pipe(gulp.dest('./www/assets/css/min'))
   }
 }
 
@@ -31,7 +33,11 @@ const js = entry => {
       .transform(vueify)
       .bundle()
       .pipe(source('site.js'))
-      .pipe(gulp.dest('./www/js'))
+      .pipe(buffer())
+      .pipe(minify({
+        mangle: false
+      }))
+      .pipe(gulp.dest('./www/assets/js'))
   }
 }
 

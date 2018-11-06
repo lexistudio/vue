@@ -2,15 +2,16 @@
 const Vue         = require("vue/dist/vue.js");
 const VueResource = require("vue-resource");
 const VueRouter   = require("vue-router");
+const NProgress   = require("./nprogress.js");
 
 //register plugin
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
 //component
-const main     = require("./site/layout/main.vue");
-const blog     = require("./site/layout/blog.vue");
-const notFound = require("./site/error/template.vue");
+const Main      = require("./site/layout/main.vue");
+const Blog      = require("./site/layout/blog.vue");
+const NotFound  = require("./site/error/template.vue");
 
 //config console log
 Vue.config.devtools = false
@@ -18,10 +19,10 @@ Vue.config.productionTip = false
 
 //routes
 const routes = [
-  { name: "Главная", isActive: true, path: "/", component: main,},
-  { name: "Блог", isActive: true, path: "/blog", component: blog },
-  { name: "", isActive: true, path: "/contacts", component: notFound },
-  { name: "Страница не найдена", isActive: false, path: "*", component: notFound },
+  { name: "Главная", isActive: true, path: "/", component: Main,},
+  { name: "Блог", isActive: true, path: "/blog", component: Blog },
+  { name: "Контакты", isActive: true, path: "/contacts", component: NotFound },
+  { name: "Страница не найдена", isActive: false, path: "*", component: NotFound },
 ]
 
 //init router
@@ -30,14 +31,18 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach(function (to, from, next) {
-  NProgress.start();
+router.beforeResolve(function (to, from, next) {
+  if (to.name) {
+    NProgress.start();
+    window.document.title = to.name != "" ? to.name : "Страница не найдена";
+  }
   next()
 })
 
 router.afterEach(function (to, from) {
-  NProgress.done();
-  window.document.title = to.name != "" ? to.name : "Страница не найдена";
+  setTimeout(function () {
+    NProgress.done();
+  }, 300)
 })
 
 //init vue

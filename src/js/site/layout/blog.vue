@@ -34,7 +34,6 @@
         var option = {
           params: {
             _start: 0,
-            _limit: 8
           }
         }
         this.$http.get(this.url, option).then(function (e) {

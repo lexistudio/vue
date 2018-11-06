@@ -320,37 +320,16 @@ h6 {
 
 @font-face {
   font-family: "PT Sans";
-  src: local("☺︎"), url("/assets/fnt/ptsans/ptsans.woff") format("woff"), url("/assets/fnt/ptsans/ptsans.woff2") format("woff2");
+  src: local("☺︎"), url("/assets/fnt/pt-sans/pt-sans-r400.woff") format("woff"), url("/assets/fnt/pt-sans/pt-sans-r400.woff2") format("woff2");
   font-style: normal;
   font-weight: normal;
 }
 
 @font-face {
   font-family: "PT Sans";
-  src: local("☺︎"), url("/assets/fnt/ptsans/ptsansbold.woff") format("woff"), url("/assets/fnt/ptsans/ptsansbold.woff2") format("woff2");
+  src: local("☺︎"), url("/assets/fnt/pt-sans/pt-sans-r700.woff") format("woff"), url("/assets/fnt/pt-sans/pt-sans-r700.woff2") format("woff2");
   font-style: normal;
   font-weight: bold;
-}
-
-@font-face {
-  font-family: "Exo";
-  src: local("☺︎"), url("/assets/fnt/exo/exo.woff") format("woff"), url("/assets/fnt/exo/exo.woff2") format("woff2");
-  font-style: normal;
-  font-weight: normal;
-}
-
-@font-face {
-  font-family: "Exo";
-  src: local("☺︎"), url("/assets/fnt/exo/exobold.woff") format("woff"), url("/assets/fnt/exo/exobold.woff2") format("woff2");
-  font-style: normal;
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: "Exo";
-  src: local("☺︎"), url("/assets/fnt/exo/exolight.woff") format("woff"), url("/assets/fnt/exo/exolight.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 300;
 }
 
 #nprogress {

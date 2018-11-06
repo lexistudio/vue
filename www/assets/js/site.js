@@ -1,484 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
-/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
- * @license MIT */
-
-;(function(root, factory) {
-
-  if (typeof define === 'function' && define.amd) {
-    define(factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory();
-  } else {
-    root.NProgress = factory();
-  }
-
-})(this, function() {
-  var NProgress = {};
-
-  NProgress.version = '0.2.0';
-
-  var Settings = NProgress.settings = {
-    minimum: 0.08,
-    easing: 'ease',
-    positionUsing: '',
-    speed: 200,
-    trickle: true,
-    trickleRate: 0.02,
-    trickleSpeed: 800,
-    showSpinner: true,
-    barSelector: '[role="bar"]',
-    spinnerSelector: '[role="spinner"]',
-    parent: 'body',
-    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
-  };
-
-  /**
-   * Updates configuration.
-   *
-   *     NProgress.configure({
-   *       minimum: 0.1
-   *     });
-   */
-  NProgress.configure = function(options) {
-    var key, value;
-    for (key in options) {
-      value = options[key];
-      if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
-    }
-
-    return this;
-  };
-
-  /**
-   * Last number.
-   */
-
-  NProgress.status = null;
-
-  /**
-   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
-   *
-   *     NProgress.set(0.4);
-   *     NProgress.set(1.0);
-   */
-
-  NProgress.set = function(n) {
-    var started = NProgress.isStarted();
-
-    n = clamp(n, Settings.minimum, 1);
-    NProgress.status = (n === 1 ? null : n);
-
-    var progress = NProgress.render(!started),
-        bar      = progress.querySelector(Settings.barSelector),
-        speed    = Settings.speed,
-        ease     = Settings.easing;
-
-    progress.offsetWidth; /* Repaint */
-
-    queue(function(next) {
-      // Set positionUsing if it hasn't already been set
-      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
-
-      // Add transition
-      css(bar, barPositionCSS(n, speed, ease));
-
-      if (n === 1) {
-        // Fade out
-        css(progress, { 
-          transition: 'none', 
-          opacity: 1 
-        });
-        progress.offsetWidth; /* Repaint */
-
-        setTimeout(function() {
-          css(progress, { 
-            transition: 'all ' + speed + 'ms linear', 
-            opacity: 0 
-          });
-          setTimeout(function() {
-            NProgress.remove();
-            next();
-          }, speed);
-        }, speed);
-      } else {
-        setTimeout(next, speed);
-      }
-    });
-
-    return this;
-  };
-
-  NProgress.isStarted = function() {
-    return typeof NProgress.status === 'number';
-  };
-
-  /**
-   * Shows the progress bar.
-   * This is the same as setting the status to 0%, except that it doesn't go backwards.
-   *
-   *     NProgress.start();
-   *
-   */
-  NProgress.start = function() {
-    if (!NProgress.status) NProgress.set(0);
-
-    var work = function() {
-      setTimeout(function() {
-        if (!NProgress.status) return;
-        NProgress.trickle();
-        work();
-      }, Settings.trickleSpeed);
-    };
-
-    if (Settings.trickle) work();
-
-    return this;
-  };
-
-  /**
-   * Hides the progress bar.
-   * This is the *sort of* the same as setting the status to 100%, with the
-   * difference being `done()` makes some placebo effect of some realistic motion.
-   *
-   *     NProgress.done();
-   *
-   * If `true` is passed, it will show the progress bar even if its hidden.
-   *
-   *     NProgress.done(true);
-   */
-
-  NProgress.done = function(force) {
-    if (!force && !NProgress.status) return this;
-
-    return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
-  };
-
-  /**
-   * Increments by a random amount.
-   */
-
-  NProgress.inc = function(amount) {
-    var n = NProgress.status;
-
-    if (!n) {
-      return NProgress.start();
-    } else {
-      if (typeof amount !== 'number') {
-        amount = (1 - n) * clamp(Math.random() * n, 0.1, 0.95);
-      }
-
-      n = clamp(n + amount, 0, 0.994);
-      return NProgress.set(n);
-    }
-  };
-
-  NProgress.trickle = function() {
-    return NProgress.inc(Math.random() * Settings.trickleRate);
-  };
-
-  /**
-   * Waits for all supplied jQuery promises and
-   * increases the progress as the promises resolve.
-   *
-   * @param $promise jQUery Promise
-   */
-  (function() {
-    var initial = 0, current = 0;
-
-    NProgress.promise = function($promise) {
-      if (!$promise || $promise.state() === "resolved") {
-        return this;
-      }
-
-      if (current === 0) {
-        NProgress.start();
-      }
-
-      initial++;
-      current++;
-
-      $promise.always(function() {
-        current--;
-        if (current === 0) {
-            initial = 0;
-            NProgress.done();
-        } else {
-            NProgress.set((initial - current) / initial);
-        }
-      });
-
-      return this;
-    };
-
-  })();
-
-  /**
-   * (Internal) renders the progress bar markup based on the `template`
-   * setting.
-   */
-
-  NProgress.render = function(fromStart) {
-    if (NProgress.isRendered()) return document.getElementById('nprogress');
-
-    addClass(document.documentElement, 'nprogress-busy');
-    
-    var progress = document.createElement('div');
-    progress.id = 'nprogress';
-    progress.innerHTML = Settings.template;
-
-    var bar      = progress.querySelector(Settings.barSelector),
-        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
-        parent   = document.querySelector(Settings.parent),
-        spinner;
-    
-    css(bar, {
-      transition: 'all 0 linear',
-      transform: 'translate3d(' + perc + '%,0,0)'
-    });
-
-    if (!Settings.showSpinner) {
-      spinner = progress.querySelector(Settings.spinnerSelector);
-      spinner && removeElement(spinner);
-    }
-
-    if (parent != document.body) {
-      addClass(parent, 'nprogress-custom-parent');
-    }
-
-    parent.appendChild(progress);
-    return progress;
-  };
-
-  /**
-   * Removes the element. Opposite of render().
-   */
-
-  NProgress.remove = function() {
-    removeClass(document.documentElement, 'nprogress-busy');
-    removeClass(document.querySelector(Settings.parent), 'nprogress-custom-parent');
-    var progress = document.getElementById('nprogress');
-    progress && removeElement(progress);
-  };
-
-  /**
-   * Checks if the progress bar is rendered.
-   */
-
-  NProgress.isRendered = function() {
-    return !!document.getElementById('nprogress');
-  };
-
-  /**
-   * Determine which positioning CSS rule to use.
-   */
-
-  NProgress.getPositioningCSS = function() {
-    // Sniff on document.body.style
-    var bodyStyle = document.body.style;
-
-    // Sniff prefixes
-    var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
-                       ('MozTransform' in bodyStyle) ? 'Moz' :
-                       ('msTransform' in bodyStyle) ? 'ms' :
-                       ('OTransform' in bodyStyle) ? 'O' : '';
-
-    if (vendorPrefix + 'Perspective' in bodyStyle) {
-      // Modern browsers with 3D support, e.g. Webkit, IE10
-      return 'translate3d';
-    } else if (vendorPrefix + 'Transform' in bodyStyle) {
-      // Browsers without 3D support, e.g. IE9
-      return 'translate';
-    } else {
-      // Browsers without translate() support, e.g. IE7-8
-      return 'margin';
-    }
-  };
-
-  /**
-   * Helpers
-   */
-
-  function clamp(n, min, max) {
-    if (n < min) return min;
-    if (n > max) return max;
-    return n;
-  }
-
-  /**
-   * (Internal) converts a percentage (`0..1`) to a bar translateX
-   * percentage (`-100%..0%`).
-   */
-
-  function toBarPerc(n) {
-    return (-1 + n) * 100;
-  }
-
-
-  /**
-   * (Internal) returns the correct CSS for changing the bar's
-   * position given an n percentage, and speed and ease from Settings
-   */
-
-  function barPositionCSS(n, speed, ease) {
-    var barCSS;
-
-    if (Settings.positionUsing === 'translate3d') {
-      barCSS = { transform: 'translate3d('+toBarPerc(n)+'%,0,0)' };
-    } else if (Settings.positionUsing === 'translate') {
-      barCSS = { transform: 'translate('+toBarPerc(n)+'%,0)' };
-    } else {
-      barCSS = { 'margin-left': toBarPerc(n)+'%' };
-    }
-
-    barCSS.transition = 'all '+speed+'ms '+ease;
-
-    return barCSS;
-  }
-
-  /**
-   * (Internal) Queues a function to be executed.
-   */
-
-  var queue = (function() {
-    var pending = [];
-    
-    function next() {
-      var fn = pending.shift();
-      if (fn) {
-        fn(next);
-      }
-    }
-
-    return function(fn) {
-      pending.push(fn);
-      if (pending.length == 1) next();
-    };
-  })();
-
-  /**
-   * (Internal) Applies css properties to an element, similar to the jQuery 
-   * css method.
-   *
-   * While this helper does assist with vendor prefixed property names, it 
-   * does not perform any manipulation of values prior to setting styles.
-   */
-
-  var css = (function() {
-    var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
-        cssProps    = {};
-
-    function camelCase(string) {
-      return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
-        return letter.toUpperCase();
-      });
-    }
-
-    function getVendorProp(name) {
-      var style = document.body.style;
-      if (name in style) return name;
-
-      var i = cssPrefixes.length,
-          capName = name.charAt(0).toUpperCase() + name.slice(1),
-          vendorName;
-      while (i--) {
-        vendorName = cssPrefixes[i] + capName;
-        if (vendorName in style) return vendorName;
-      }
-
-      return name;
-    }
-
-    function getStyleProp(name) {
-      name = camelCase(name);
-      return cssProps[name] || (cssProps[name] = getVendorProp(name));
-    }
-
-    function applyCss(element, prop, value) {
-      prop = getStyleProp(prop);
-      element.style[prop] = value;
-    }
-
-    return function(element, properties) {
-      var args = arguments,
-          prop, 
-          value;
-
-      if (args.length == 2) {
-        for (prop in properties) {
-          value = properties[prop];
-          if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
-        }
-      } else {
-        applyCss(element, args[1], args[2]);
-      }
-    }
-  })();
-
-  /**
-   * (Internal) Determines if an element or space separated list of class names contains a class name.
-   */
-
-  function hasClass(element, name) {
-    var list = typeof element == 'string' ? element : classList(element);
-    return list.indexOf(' ' + name + ' ') >= 0;
-  }
-
-  /**
-   * (Internal) Adds a class to an element.
-   */
-
-  function addClass(element, name) {
-    var oldList = classList(element),
-        newList = oldList + name;
-
-    if (hasClass(oldList, name)) return; 
-
-    // Trim the opening space.
-    element.className = newList.substring(1);
-  }
-
-  /**
-   * (Internal) Removes a class from an element.
-   */
-
-  function removeClass(element, name) {
-    var oldList = classList(element),
-        newList;
-
-    if (!hasClass(element, name)) return;
-
-    // Replace the class name.
-    newList = oldList.replace(' ' + name + ' ', ' ');
-
-    // Trim the opening and closing spaces.
-    element.className = newList.substring(1, newList.length - 1);
-  }
-
-  /**
-   * (Internal) Gets a space separated list of the class names on the element. 
-   * The list is wrapped with a single space on each end to facilitate finding 
-   * matches within the list.
-   */
-
-  function classList(element) {
-    return (' ' + (element.className || '') + ' ').replace(/\s+/gi, ' ');
-  }
-
-  /**
-   * (Internal) Removes an element from the DOM.
-   */
-
-  function removeElement(element) {
-    element && element.parentNode && element.parentNode.removeChild(element);
-  }
-
-  return NProgress;
-});
-
-
-},{}],3:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -664,7 +186,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -743,7 +265,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":3,"timers":4}],5:[function(require,module,exports){
+},{"process/browser.js":2,"timers":3}],4:[function(require,module,exports){
 var Vue // late bind
 var version
 var map = Object.create(null)
@@ -988,15 +510,7 @@ exports.reload = tryWrap(function (id, options) {
   })
 })
 
-},{}],6:[function(require,module,exports){
-/*!
- * nprogress v0.1.5
- * https://github.com/vue-bulma/nprogress
- * Released under the MIT License.
- */
-
-!function(r,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e(require("nprogress")):"function"==typeof define&&define.amd?define(["nprogress"],e):r.vueNprogress=e(r.nprogress)}(this,function(r){"use strict";function e(r){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};this.installed||(this.installed=!0,Object.defineProperty(r.prototype,"$nprogress",{get:function(){return this.$root._nprogress}}),e=Object.assign({},n,e),r.mixin({beforeCreate:function(){var t=this,n=this.$options.nprogress;n&&!function(){var o=function(){u=0,a=0,n.done()},s=function(){0===u&&setTimeout(function(){return n.start()},f),u++,n.set(a/u)},i=function(){setTimeout(function(){++a,a>=u?o():n.set(a/u-.1)},f+50)},u=0,a=0,c=e,f=c.latencyThreshold,p=c.router,h=c.http,g=!0;if(t._nprogress=n,n.init(t),h){var d=r.http,l=r.axios;d?d.interceptors.push(function(r,e){var t="showProgressBar"in r?r.showProgressBar:h;t&&s(),e(function(r){return t?void i():r})}):l&&(l.interceptors.request.use(function(r){return"showProgressBar"in r||(r.showProgressBar=h),r.showProgressBar&&s(),r},function(r){return Promise.reject(r)}),l.interceptors.response.use(function(r){return r.config.showProgressBar&&i(),r},function(r){return r.config&&r.config.showProgressBar&&i(),Promise.reject(r)}))}var P=p&&t.$options.router;P&&(P.beforeEach(function(r,e,t){var n="showProgressBar"in r.meta?r.meta.showProgressBar:p;n&&g&&(s(),g=!1),t()}),P.afterEach(function(r){var e="showProgressBar"in r.meta?r.meta.showProgressBar:p;e&&(i(),g=!0)}))}()}}))}function t(r){this.app=null,this.configure(r||{})}r="default"in r?r.default:r;var n={latencyThreshold:100,router:!0,http:!0};return t.install=e,t.start=function(){},Object.assign(t.prototype,r,{init:function(r){this.app=r}}),t});
-},{"nprogress":2}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*!
  * vue-resource v1.5.1
  * https://github.com/pagekit/vue-resource
@@ -2555,7 +2069,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 module.exports = plugin;
 
-},{"got":1}],8:[function(require,module,exports){
+},{"got":1}],6:[function(require,module,exports){
 (function (process){
 /**
   * vue-router v3.0.1
@@ -5184,7 +4698,7 @@ if (inBrowser && window.Vue) {
 module.exports = VueRouter;
 
 }).call(this,require('_process'))
-},{"_process":3}],9:[function(require,module,exports){
+},{"_process":2}],7:[function(require,module,exports){
 (function (global,setImmediate){
 /*!
  * Vue.js v2.5.17
@@ -16135,7 +15649,7 @@ return Vue;
 })));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"timers":4}],10:[function(require,module,exports){
+},{"timers":3}],8:[function(require,module,exports){
 (function (process,global,setImmediate){
 /*!
  * Vue.js v2.5.17
@@ -24173,7 +23687,7 @@ if (inBrowser) {
 module.exports = Vue;
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"_process":3,"timers":4}],11:[function(require,module,exports){
+},{"_process":2,"timers":3}],9:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 function noop () {}
@@ -24198,22 +23712,503 @@ exports.insert = function (css) {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
+ * @license MIT */
+
+;(function(root, factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.NProgress = factory();
+  }
+
+})(this, function() {
+  var NProgress = {};
+
+  NProgress.version = '0.2.0';
+
+  var Settings = NProgress.settings = {
+    minimum: 0.08,
+    easing: 'linear',
+    positionUsing: '',
+    speed: 200,
+    trickle: true,
+    trickleSpeed: 200,
+    showSpinner: true,
+    barSelector: '[role="bar"]',
+    spinnerSelector: '[role="spinner"]',
+    parent: 'body',
+    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+  };
+
+  /**
+   * Updates configuration.
+   *
+   *     NProgress.configure({
+   *       minimum: 0.1
+   *     });
+   */
+  NProgress.configure = function(options) {
+    var key, value;
+    for (key in options) {
+      value = options[key];
+      if (value !== undefined && options.hasOwnProperty(key)) Settings[key] = value;
+    }
+
+    return this;
+  };
+
+  /**
+   * Last number.
+   */
+
+  NProgress.status = null;
+
+  /**
+   * Sets the progress bar status, where `n` is a number from `0.0` to `1.0`.
+   *
+   *     NProgress.set(0.4);
+   *     NProgress.set(1.0);
+   */
+
+  NProgress.set = function(n) {
+    var started = NProgress.isStarted();
+
+    n = clamp(n, Settings.minimum, 1);
+    NProgress.status = (n === 1 ? null : n);
+
+    var progress = NProgress.render(!started),
+        bar      = progress.querySelector(Settings.barSelector),
+        speed    = Settings.speed,
+        ease     = Settings.easing;
+
+    progress.offsetWidth; /* Repaint */
+
+    queue(function(next) {
+      // Set positionUsing if it hasn't already been set
+      if (Settings.positionUsing === '') Settings.positionUsing = NProgress.getPositioningCSS();
+
+      // Add transition
+      css(bar, barPositionCSS(n, speed, ease));
+
+      if (n === 1) {
+        // Fade out
+        css(progress, {
+          transition: 'none',
+          opacity: 1
+        });
+        progress.offsetWidth; /* Repaint */
+
+        setTimeout(function() {
+          css(progress, {
+            transition: 'all ' + speed + 'ms linear',
+            opacity: 0
+          });
+          setTimeout(function() {
+            NProgress.remove();
+            next();
+          }, speed);
+        }, speed);
+      } else {
+        setTimeout(next, speed);
+      }
+    });
+
+    return this;
+  };
+
+  NProgress.isStarted = function() {
+    return typeof NProgress.status === 'number';
+  };
+
+  /**
+   * Shows the progress bar.
+   * This is the same as setting the status to 0%, except that it doesn't go backwards.
+   *
+   *     NProgress.start();
+   *
+   */
+  NProgress.start = function() {
+    if (!NProgress.status) NProgress.set(0);
+
+    var work = function() {
+      setTimeout(function() {
+        if (!NProgress.status) return;
+        NProgress.trickle();
+        work();
+      }, Settings.trickleSpeed);
+    };
+
+    if (Settings.trickle) work();
+
+    return this;
+  };
+
+  /**
+   * Hides the progress bar.
+   * This is the *sort of* the same as setting the status to 100%, with the
+   * difference being `done()` makes some placebo effect of some realistic motion.
+   *
+   *     NProgress.done();
+   *
+   * If `true` is passed, it will show the progress bar even if its hidden.
+   *
+   *     NProgress.done(true);
+   */
+
+  NProgress.done = function(force) {
+    if (!force && !NProgress.status) return this;
+
+    return NProgress.inc(0.3 + 0.5 * Math.random()).set(1);
+  };
+
+  /**
+   * Increments by a random amount.
+   */
+
+  NProgress.inc = function(amount) {
+    var n = NProgress.status;
+
+    if (!n) {
+      return NProgress.start();
+    } else if(n > 1) {
+      return;
+    } else {
+      if (typeof amount !== 'number') {
+        if (n >= 0 && n < 0.2) { amount = 0.1; }
+        else if (n >= 0.2 && n < 0.5) { amount = 0.04; }
+        else if (n >= 0.5 && n < 0.8) { amount = 0.02; }
+        else if (n >= 0.8 && n < 0.99) { amount = 0.005; }
+        else { amount = 0; }
+      }
+
+      n = clamp(n + amount, 0, 0.994);
+      return NProgress.set(n);
+    }
+  };
+
+  NProgress.trickle = function() {
+    return NProgress.inc();
+  };
+
+  /**
+   * Waits for all supplied jQuery promises and
+   * increases the progress as the promises resolve.
+   *
+   * @param $promise jQUery Promise
+   */
+  (function() {
+    var initial = 0, current = 0;
+
+    NProgress.promise = function($promise) {
+      if (!$promise || $promise.state() === "resolved") {
+        return this;
+      }
+
+      if (current === 0) {
+        NProgress.start();
+      }
+
+      initial++;
+      current++;
+
+      $promise.always(function() {
+        current--;
+        if (current === 0) {
+            initial = 0;
+            NProgress.done();
+        } else {
+            NProgress.set((initial - current) / initial);
+        }
+      });
+
+      return this;
+    };
+
+  })();
+
+  /**
+   * (Internal) renders the progress bar markup based on the `template`
+   * setting.
+   */
+
+  NProgress.render = function(fromStart) {
+    if (NProgress.isRendered()) return document.getElementById('nprogress');
+
+    addClass(document.documentElement, 'nprogress-busy');
+
+    var progress = document.createElement('div');
+    progress.id = 'nprogress';
+    progress.innerHTML = Settings.template;
+
+    var bar      = progress.querySelector(Settings.barSelector),
+        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
+        parent   = document.querySelector(Settings.parent),
+        spinner;
+
+    css(bar, {
+      transition: 'all 0 linear',
+      transform: 'translate3d(' + perc + '%,0,0)'
+    });
+
+    if (!Settings.showSpinner) {
+      spinner = progress.querySelector(Settings.spinnerSelector);
+      spinner && removeElement(spinner);
+    }
+
+    if (parent != document.body) {
+      addClass(parent, 'nprogress-custom-parent');
+    }
+
+    parent.appendChild(progress);
+    return progress;
+  };
+
+  /**
+   * Removes the element. Opposite of render().
+   */
+
+  NProgress.remove = function() {
+    removeClass(document.documentElement, 'nprogress-busy');
+    removeClass(document.querySelector(Settings.parent), 'nprogress-custom-parent');
+    var progress = document.getElementById('nprogress');
+    progress && removeElement(progress);
+  };
+
+  /**
+   * Checks if the progress bar is rendered.
+   */
+
+  NProgress.isRendered = function() {
+    return !!document.getElementById('nprogress');
+  };
+
+  /**
+   * Determine which positioning CSS rule to use.
+   */
+
+  NProgress.getPositioningCSS = function() {
+    // Sniff on document.body.style
+    var bodyStyle = document.body.style;
+
+    // Sniff prefixes
+    var vendorPrefix = ('WebkitTransform' in bodyStyle) ? 'Webkit' :
+                       ('MozTransform' in bodyStyle) ? 'Moz' :
+                       ('msTransform' in bodyStyle) ? 'ms' :
+                       ('OTransform' in bodyStyle) ? 'O' : '';
+
+    if (vendorPrefix + 'Perspective' in bodyStyle) {
+      // Modern browsers with 3D support, e.g. Webkit, IE10
+      return 'translate3d';
+    } else if (vendorPrefix + 'Transform' in bodyStyle) {
+      // Browsers without 3D support, e.g. IE9
+      return 'translate';
+    } else {
+      // Browsers without translate() support, e.g. IE7-8
+      return 'margin';
+    }
+  };
+
+  /**
+   * Helpers
+   */
+
+  function clamp(n, min, max) {
+    if (n < min) return min;
+    if (n > max) return max;
+    return n;
+  }
+
+  /**
+   * (Internal) converts a percentage (`0..1`) to a bar translateX
+   * percentage (`-100%..0%`).
+   */
+
+  function toBarPerc(n) {
+    return (-1 + n) * 100;
+  }
+
+
+  /**
+   * (Internal) returns the correct CSS for changing the bar's
+   * position given an n percentage, and speed and ease from Settings
+   */
+
+  function barPositionCSS(n, speed, ease) {
+    var barCSS;
+
+    if (Settings.positionUsing === 'translate3d') {
+      barCSS = { transform: 'translate3d('+toBarPerc(n)+'%,0,0)' };
+    } else if (Settings.positionUsing === 'translate') {
+      barCSS = { transform: 'translate('+toBarPerc(n)+'%,0)' };
+    } else {
+      barCSS = { 'margin-left': toBarPerc(n)+'%' };
+    }
+
+    barCSS.transition = 'all '+speed+'ms '+ease;
+
+    return barCSS;
+  }
+
+  /**
+   * (Internal) Queues a function to be executed.
+   */
+
+  var queue = (function() {
+    var pending = [];
+
+    function next() {
+      var fn = pending.shift();
+      if (fn) {
+        fn(next);
+      }
+    }
+
+    return function(fn) {
+      pending.push(fn);
+      if (pending.length == 1) next();
+    };
+  })();
+
+  /**
+   * (Internal) Applies css properties to an element, similar to the jQuery
+   * css method.
+   *
+   * While this helper does assist with vendor prefixed property names, it
+   * does not perform any manipulation of values prior to setting styles.
+   */
+
+  var css = (function() {
+    var cssPrefixes = [ 'Webkit', 'O', 'Moz', 'ms' ],
+        cssProps    = {};
+
+    function camelCase(string) {
+      return string.replace(/^-ms-/, 'ms-').replace(/-([\da-z])/gi, function(match, letter) {
+        return letter.toUpperCase();
+      });
+    }
+
+    function getVendorProp(name) {
+      var style = document.body.style;
+      if (name in style) return name;
+
+      var i = cssPrefixes.length,
+          capName = name.charAt(0).toUpperCase() + name.slice(1),
+          vendorName;
+      while (i--) {
+        vendorName = cssPrefixes[i] + capName;
+        if (vendorName in style) return vendorName;
+      }
+
+      return name;
+    }
+
+    function getStyleProp(name) {
+      name = camelCase(name);
+      return cssProps[name] || (cssProps[name] = getVendorProp(name));
+    }
+
+    function applyCss(element, prop, value) {
+      prop = getStyleProp(prop);
+      element.style[prop] = value;
+    }
+
+    return function(element, properties) {
+      var args = arguments,
+          prop,
+          value;
+
+      if (args.length == 2) {
+        for (prop in properties) {
+          value = properties[prop];
+          if (value !== undefined && properties.hasOwnProperty(prop)) applyCss(element, prop, value);
+        }
+      } else {
+        applyCss(element, args[1], args[2]);
+      }
+    }
+  })();
+
+  /**
+   * (Internal) Determines if an element or space separated list of class names contains a class name.
+   */
+
+  function hasClass(element, name) {
+    var list = typeof element == 'string' ? element : classList(element);
+    return list.indexOf(' ' + name + ' ') >= 0;
+  }
+
+  /**
+   * (Internal) Adds a class to an element.
+   */
+
+  function addClass(element, name) {
+    var oldList = classList(element),
+        newList = oldList + name;
+
+    if (hasClass(oldList, name)) return;
+
+    // Trim the opening space.
+    element.className = newList.substring(1);
+  }
+
+  /**
+   * (Internal) Removes a class from an element.
+   */
+
+  function removeClass(element, name) {
+    var oldList = classList(element),
+        newList;
+
+    if (!hasClass(element, name)) return;
+
+    // Replace the class name.
+    newList = oldList.replace(' ' + name + ' ', ' ');
+
+    // Trim the opening and closing spaces.
+    element.className = newList.substring(1, newList.length - 1);
+  }
+
+  /**
+   * (Internal) Gets a space separated list of the class names on the element.
+   * The list is wrapped with a single space on each end to facilitate finding
+   * matches within the list.
+   */
+
+  function classList(element) {
+    return (' ' + (element && element.className || '') + ' ').replace(/\s+/gi, ' ');
+  }
+
+  /**
+   * (Internal) Removes an element from the DOM.
+   */
+
+  function removeElement(element) {
+    element && element.parentNode && element.parentNode.removeChild(element);
+  }
+
+  return NProgress;
+});
+
+},{}],11:[function(require,module,exports){
 //plugin
 const Vue         = require("vue/dist/vue.js");
 const VueResource = require("vue-resource");
 const VueRouter   = require("vue-router");
-const Np   = require("vue-nprogress");
+const NProgress   = require("./nprogress.js");
 
 //register plugin
 Vue.use(VueResource);
 Vue.use(VueRouter);
-Vue.use(Np);
 
 //component
-const main     = require("./site/layout/main.vue");
-const blog     = require("./site/layout/blog.vue");
-const notFound = require("./site/error/template.vue");
+const Main      = require("./site/layout/main.vue");
+const Blog      = require("./site/layout/blog.vue");
+const NotFound  = require("./site/error/template.vue");
 
 //config console log
 Vue.config.devtools = false
@@ -24221,10 +24216,10 @@ Vue.config.productionTip = false
 
 //routes
 const routes = [
-  { name: "Главная", isActive: true, path: "/", component: main,},
-  { name: "Блог", isActive: true, path: "/blog", component: blog },
-  { name: "", isActive: true, path: "/contacts", component: notFound },
-  { name: "Страница не найдена", isActive: false, path: "*", component: notFound },
+  { name: "Главная", isActive: true, path: "/", component: Main,},
+  { name: "Блог", isActive: true, path: "/blog", component: Blog },
+  { name: "Контакты", isActive: true, path: "/contacts", component: NotFound },
+  { name: "Страница не найдена", isActive: false, path: "*", component: NotFound },
 ]
 
 //init router
@@ -24233,14 +24228,18 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach(function (to, from, next) {
-  NProgress.start();
+router.beforeResolve(function (to, from, next) {
+  if (to.name) {
+    NProgress.start();
+    window.document.title = to.name != "" ? to.name : "Страница не найдена";
+  }
   next()
 })
 
 router.afterEach(function (to, from) {
-  NProgress.done();
-  window.document.title = to.name != "" ? to.name : "Страница не найдена";
+  setTimeout(function () {
+    NProgress.done();
+  }, 300)
 })
 
 //init vue
@@ -24250,7 +24249,7 @@ new Vue({
     isActiveGrid: true
   }
 }).$mount("#app")
-},{"./site/error/template.vue":13,"./site/layout/blog.vue":15,"./site/layout/main.vue":16,"vue-nprogress":6,"vue-resource":7,"vue-router":8,"vue/dist/vue.js":9}],13:[function(require,module,exports){
+},{"./nprogress.js":10,"./site/error/template.vue":12,"./site/layout/blog.vue":14,"./site/layout/main.vue":15,"vue-resource":5,"vue-router":6,"vue/dist/vue.js":7}],12:[function(require,module,exports){
 ;(function(){
 //
 //
@@ -24284,7 +24283,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-279868ec", __vue__options__)
   }
 })()}
-},{"../menu/template.vue":17,"vue":10,"vue-hot-reload-api":5}],14:[function(require,module,exports){
+},{"../menu/template.vue":16,"vue":8,"vue-hot-reload-api":4}],13:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".head {\n  background: #35495E;\n  height: 300px;\n}")
 ;(function(){
 //
@@ -24321,7 +24320,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-5e806f5d", __vue__options__)
   }
 })()}
-},{"../menu/template.vue":17,"vue":10,"vue-hot-reload-api":5,"vueify/lib/insert-css":11}],15:[function(require,module,exports){
+},{"../menu/template.vue":16,"vue":8,"vue-hot-reload-api":4,"vueify/lib/insert-css":9}],14:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".news[data-v-f324b7f0] {\n  display: flex;\n  flex-wrap: wrap;\n  margin: 0 -15px;\n  padding: 15px 0;\n}\n.news__item[data-v-f324b7f0] {\n  width: 25%;\n  box-sizing: border-box;\n  padding: 15px;\n  display: flex;\n}\n.news__content[data-v-f324b7f0] {\n  width: 100%;\n  box-sizing: border-box;\n  box-shadow: 0 0 0 1px #ccc inset;\n  padding: 15px;\n}\n.news__img[data-v-f324b7f0] {\n  height: 200px;\n  background: #35495E;\n  margin: -15px;\n  margin-bottom: 15px;\n}\n.news__title[data-v-f324b7f0] {\n  font-size: 18px;\n  font-weight: bold;\n  line-height: 1.2;\n  text-transform: capitalize;\n}\np[data-v-f324b7f0] {\n  font-size: 16px;\n  line-height: 1.2;\n  padding-top: 12px;\n}\n@media screen and (max-width: 1200px) {\n  .news[data-v-f324b7f0] {\n    margin: 0 -10px;\n  }\n  .news__item[data-v-f324b7f0] {\n    padding: 10px;\n  }\n}\n@media screen and (max-width: 980px) {\n  .news__item[data-v-f324b7f0] {\n    width: 50%;\n  }\n}\n@media screen and (max-width: 765px) {\n  .news__item[data-v-f324b7f0] {\n    width: 100%;\n  }\n}")
 ;(function(){
 //
@@ -24360,7 +24359,6 @@ module.exports = {
       var option = {
         params: {
           _start: 0,
-          _limit: 8
         }
       }
       this.$http.get(this.url, option).then(function (e) {
@@ -24396,7 +24394,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-f324b7f0", __vue__options__)
   }
 })()}
-},{"../header/template.vue":14,"vue":10,"vue-hot-reload-api":5,"vueify/lib/insert-css":11}],16:[function(require,module,exports){
+},{"../header/template.vue":13,"vue":8,"vue-hot-reload-api":4,"vueify/lib/insert-css":9}],15:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".head[data-v-a548d2c2] {\n  height: 700px;\n  background: #35495E;\n}\n\n.content[data-v-a548d2c2] {\n  color: #fff;\n  height: 541px;\n  line-height: 1;\n  font-weight: bold;\n  display: flex;\n  text-transform: uppercase;\n  flex-direction: column;\n  justify-content: center;\n  font-size: 0;\n  user-select: none;\n}\n\n.content .span[data-v-a548d2c2] {\n  color: #41B883;\n}\n\n.content span[data-v-a548d2c2] {\n  display: inline-block;\n  font-size: 80px;\n  letter-spacing: .05em;\n  opacity: 1;\n  transform: translateX(0) scale(1);\n  transition: opacity .2s, transform .2s;\n}\n\n.content.active span[data-v-a548d2c2] {\n  opacity: 0;\n  transform: translateX(20px) scale(.2);\n}\n\n.content span[data-v-a548d2c2]:nth-child(2) {\n  transition-delay: .1s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(3) {\n  transition-delay: .2s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(4) {\n  transition-delay: .3s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(5) {\n  transition-delay: .4s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(6) {\n  transition-delay: .5s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(7) {\n  transition-delay: .6s;\n}\n\n.content span[data-v-a548d2c2]:nth-child(8) {\n  transition-delay: .7s;\n}\n\n.preim[data-v-a548d2c2] {\n  display: flex;\n  justify-content: space-between;\n  margin-top: -100px;\n}\n.preim__item[data-v-a548d2c2] {\n  box-shadow: 0 5px 30px rgba(0,0,0,.2);\n  width: 315px;\n  height: 200px;\n  background: #fff;\n  box-sizing: border-box;\n  padding: 20px;\n}")
 ;(function(){
 //
@@ -24467,7 +24465,7 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-a548d2c2", __vue__options__)
   }
 })()}
-},{"../menu/template.vue":17,"vue":10,"vue-hot-reload-api":5,"vueify/lib/insert-css":11}],17:[function(require,module,exports){
+},{"../menu/template.vue":16,"vue":8,"vue-hot-reload-api":4,"vueify/lib/insert-css":9}],16:[function(require,module,exports){
 var __vueify_style_dispose__ = require("vueify/lib/insert-css").insert(".menu[data-v-abc36e6a] {\n  display: flex;\n  list-style: none;\n  padding: 20px 0;\n}\n.menu--main .menu__a[data-v-abc36e6a] {\n  color: #000;\n}\n.menu__li[data-v-abc36e6a] {\n  margin-left: 30px;\n}\n.menu__li[data-v-abc36e6a]:first-child {\n  margin-left: 0;\n}\n.menu__a[data-v-abc36e6a] {\n  font-size: 18px;\n  color: #fff;\n  text-decoration: none;\n}\n.menu__a.router-link-exact-active[data-v-abc36e6a] {\n  color: #41B883;\n}")
 var __vue__options__ = (typeof module.exports === "function"? module.exports.options: module.exports)
 if (__vue__options__.functional) {console.error("[vueify] functional components are not supported and should be defined in plain js files using render functions.")}
@@ -24485,4 +24483,4 @@ if (module.hot) {(function () {  var hotAPI = require("vue-hot-reload-api")
     hotAPI.reload("data-v-abc36e6a", __vue__options__)
   }
 })()}
-},{"vue":10,"vue-hot-reload-api":5,"vueify/lib/insert-css":11}]},{},[12]);
+},{"vue":8,"vue-hot-reload-api":4,"vueify/lib/insert-css":9}]},{},[11]);

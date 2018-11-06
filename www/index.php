@@ -8,14 +8,13 @@
   
   <meta name="apple-mobile-web-app-capable" content="yes">
 
-  <link rel="stylesheet" href="css/min/site.css">
+  <link rel="stylesheet" href="./assets/css/min/site.css">
 </head>
 <body>
   <div id="app" :class="{ grid: isActiveGrid }">
     <router-view></router-view>
   </div>
 
-  <script src="js/nprogress.js"></script>
-  <script src="js/site.js"></script>
+  <script src="./assets/js/site-min.js"></script>
 </body>
 </html>
