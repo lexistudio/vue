@@ -2,13 +2,22 @@
   "name": "tenzer",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "gulpfile.js",
   "scripts": {
-    "build": "browserify -t vueify -e app.js -o www/js/app.js"
+    "build": "browserify -t vueify -e src/js/site.js -o www/js/site.js"
   },
   "devDependencies": {
     "browserify": "*",
-    "stylus": "^0.54.5",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-plumber": "^1.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-stylus": "^2.7.0",
+    "gulp-watch": "^5.0.1",
+    "vinyl-source-stream": "^2.0.0",
     "vue": "*",
     "vue-nprogress": "^0.1.5",
     "vue-resource": "^1.5.1",
