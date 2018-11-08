@@ -1,0 +1,9 @@
+<?php
+  include_once ROOT."/api/modules/ApiEngine.phtml";
+
+  class MethodsController {
+    public function actionIndex() {
+      echo json_encode(Api::getPost());
+      return true;
+    }
+  }

@@ -1,0 +1,69 @@
+<?php
+
+  class Api {
+    public static function getPost() {
+      header("Access-Control-Allow-Orgin: *");
+      header("Access-Control-Allow-Methods: *");
+      header("Content-Type: application/json");
+
+      $list = array();
+
+      if ($_SERVER["REQUEST_METHOD"] == "GET") {
+        $list[0]["id"] = 1;
+        $list[0]["name"] = "title 1";
+        $list[0]["news"]["date"] = date("d.m.Y");
+        $list[0]["news"]["content"] = "content 1";
+        $list[0]["author"] = "Alexander Krylov";
+        $list[0]["group"]["like"] = intval(10);
+        $list[0]["group"]["comments"] = intval(2);
+        $list[0]["url"] = "blog/1";
+
+        $list[1]["id"] = 2;
+        $list[1]["name"] = "title 2";
+        $list[1]["news"]["date"] = date("d.m.Y");
+        $list[1]["news"]["content"] = "content 2";
+        $list[1]["author"] = "Alexander Krylov";
+        $list[1]["group"]["like"] = intval(100);
+        $list[1]["group"]["comments"] = intval(22);
+        $list[1]["url"] = "blog/2";
+
+        $list[2]["id"] = 3;
+        $list[2]["name"] = "title 3";
+        $list[2]["news"]["date"] = date("d.m.Y");
+        $list[2]["news"]["content"] = "content 2";
+        $list[2]["author"] = "Alexander Krylov";
+        $list[2]["group"]["like"] = intval(0);
+        $list[2]["group"]["comments"] = intval(2);
+        $list[2]["url"] = "blog/3";
+
+        $list[3]["id"] = 4;
+        $list[3]["name"] = "title 4";
+        $list[3]["news"]["date"] = date("d.m.Y");
+        $list[3]["news"]["content"] = "content 4";
+        $list[3]["author"] = "Alexander Krylov";
+        $list[3]["group"]["like"] = intval(0);
+        $list[3]["group"]["comments"] = intval(2);
+        $list[3]["url"] = "blog/4";
+
+        $list[4]["id"] = 5;
+        $list[4]["name"] = "title 5";
+        $list[4]["news"]["date"] = date("d.m.Y");
+        $list[4]["news"]["content"] = "content 5";
+        $list[4]["author"] = "Alexander Krylov";
+        $list[4]["group"]["like"] = intval(0);
+        $list[4]["group"]["comments"] = intval(2);
+        $list[4]["url"] = "blog/5";
+
+        $list[5]["id"] = 6;
+        $list[5]["name"] = "title 6";
+        $list[5]["news"]["date"] = date("d.m.Y");
+        $list[5]["news"]["content"] = "content 6";
+        $list[5]["author"] = "Alexander Krylov";
+        $list[5]["group"]["like"] = intval(0);
+        $list[5]["group"]["comments"] = intval(2);
+        $list[5]["url"] = "blog/6";
+      }
+
+      return $list;
+    }
+  }

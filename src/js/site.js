@@ -9,9 +9,10 @@ Vue.use(VueResource);
 Vue.use(VueRouter);
 
 //component
-const Main      = require("./site/layout/main.vue");
-const Blog      = require("./site/layout/blog.vue");
-const NotFound  = require("./site/error/template.vue");
+const Main            = require("./site/layout/main.vue");
+const Blog            = require("./site/layout/blog.vue");
+const BlogDetail      = require("./site/layout/blogDetail.vue");
+const NotFound        = require("./site/error/template.vue");
 
 //config console log
 Vue.config.devtools = false
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 const routes = [
   { name: "Главная", isActive: true, path: "/", component: Main,},
   { name: "Блог", isActive: true, path: "/blog", component: Blog },
+  { name: "Блог 1", isActive: true, path: "/blog/*", component: BlogDetail },
   { name: "Контакты", isActive: true, path: "/contacts", component: NotFound },
   { name: "Страница не найдена", isActive: false, path: "*", component: NotFound },
 ]
@@ -49,6 +51,6 @@ router.afterEach(function (to, from) {
 new Vue({
   router,
   data: {
-    isActiveGrid: true
+    isActiveGrid: false
   }
 }).$mount("#app")

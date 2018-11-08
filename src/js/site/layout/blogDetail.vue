@@ -2,55 +2,17 @@
   <div>
     <app-head></app-head>
     <div class="page">
-      <div class="news">
-        <div class="news__item" v-for="(item, index) in list" :key="index">
-          <div class="news__content">
-            <div class="news__img"></div>
-            <h2 class="news__title">
-              <router-link :to="item.url">
-                {{ item.name }}
-              </router-link>
-            </h2>
-            <p>
-              {{ item.news.content }}
-            </p>
-            <p>
-              {{ item.news.date }}
-            </p>
-          </div>
-        </div>
-      </div>
+      <h1>Blog Detail</h1>
     </div>
-    <app-foot class="foot--dark"></app-foot>
   </div>
 </template>
 
 <script>
   var header = require("../header/template.vue");
-  var Foot = require("../foot/template.vue");
 
   module.exports = {
-    data: function () {
-      return {
-        url: "/methods/blog",
-        list: []
-      }
-    },
-    methods: {
-      post: function () {
-        this.$http.get(this.url).then(function (e) {
-          this.list = e.data
-        }, function () {
-          console.log("Error");
-        })
-      }
-    },
-    created: function () {
-      this.post()
-    },
     components: {
-      appHead: header,
-      appFoot: Foot
+      appHead: header
     }
   }
 </script>

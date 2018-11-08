@@ -1,6 +1,22 @@
 AddDefaultCharset utf8
 Options -Indexes
 
+ErrorDocument 403 /
+ErrorDocument 404 /
+ErrorDocument 500 /
+
+<FilesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh|phtml|html)$">
+ Order Allow,Deny
+ Deny from all
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule api/v1/(.*)$ apis/v1/api.php?request=$1 [QSA,NC,L]
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
